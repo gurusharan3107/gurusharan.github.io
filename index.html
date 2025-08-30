@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gurusharan Gupta - Resume</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background: white;
+            font-size: 11px;
+        }
+        
+        .resume-container {
+            max-width: 8.5in;
+            margin: 0 auto;
+            background: white;
+            min-height: 11in;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            background: #1e3a5f;
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .name {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        
+        .title {
+            font-size: 16px;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 25px;
+        }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            font-size: 12px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 0;
+        }
+        
+        .sidebar {
+            background: #f8f9fa;
+            padding: 35px 30px;
+        }
+        
+        .content {
+            padding: 35px 40px;
+        }
+        
+        .section {
+            margin-bottom: 35px;
+        }
+        
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1e3a5f;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1e3a5f;
+        }
+        
+        .professional-summary {
+            font-size: 12px;
+            line-height: 1.6;
+            text-align: justify;
+            color: #444;
+        }
+        
+        .experience-item {
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .job-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1e3a5f;
+            margin-bottom: 5px;
+        }
+        
+        .company-info {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+        
+        .job-description ul {
+            list-style: none;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+        
+        .job-description li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 15px;
+        }
+        
+        .job-description li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #1e3a5f;
+            font-weight: bold;
+        }
+        
+        .skills-section {
+            margin-bottom: 25px;
+        }
+        
+        .skill-category {
+            margin-bottom: 18px;
+        }
+        
+        .skill-category h4 {
+            font-size: 11px;
+            font-weight: 700;
+            color: #1e3a5f;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+        
+        .skill-list {
+            font-size: 10px;
+            line-height: 1.4;
+            color: #555;
+        }
+        
+        .education-item, .cert-item {
+            margin-bottom: 15px;
+        }
+        
+        .degree, .cert-name {
+            font-size: 11px;
+            font-weight: 600;
+            color: #1e3a5f;
+            margin-bottom: 3px;
+        }
+        
+        .school, .cert-org {
+            font-size: 10px;
+            color: #666;
+            margin-bottom: 2px;
+        }
+        
+        .year, .cert-date {
+            font-size: 10px;
+            color: #888;
+        }
+        
+        .project-item {
+            margin-bottom: 20px;
+        }
+        
+        .project-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #1e3a5f;
+            margin-bottom: 6px;
+        }
+        
+        .project-description {
+            font-size: 11px;
+            line-height: 1.4;
+            color: #555;
+        }
+        
+        .languages-grid {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .language-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+        }
+        
+        .language-name {
+            font-weight: 600;
+            color: #1e3a5f;
+        }
+        
+        .language-level {
+            color: #666;
+        }
+        
+        @media print {
+            body {
+                font-size: 10px;
+            }
+            .resume-container {
+                box-shadow: none;
+                margin: 0;
+                max-width: none;
+            }
+            .header {
+                padding: 30px;
+            }
+            .name {
+                font-size: 28px;
+            }
+            .title {
+                font-size: 14px;
+            }
+            .main-content {
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="resume-container">
+        <header class="header">
+            <h1 class="name">GURUSHARAN GUPTA</h1>
+            <h2 class="title">Principal Solutions Architect & Engineering Leader</h2>
+            
+            <div class="contact-grid">
+                <div class="contact-item">
+                    <span>Pune, MH, 411033</span>
+                </div>
+                <div class="contact-item">
+                    <span>+91 996 043 8648</span>
+                </div>
+                <div class="contact-item">
+                    <span>gupta.gurusharan@gmail.com</span>
+                </div>
+                <div class="contact-item">
+                    <span>linkedin.com/in/gurusharangupta</span>
+                </div>
+                <div class="contact-item">
+                    <span>github.com/ingpoc</span>
+                </div>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <aside class="sidebar">
+                <div class="section">
+                    <h3 class="section-title">Core Technical Skills</h3>
+                    <div class="skills-section">
+                        <div class="skill-category">
+                            <h4>AI & Automation</h4>
+                            <p class="skill-list">Multi-Agent Automation & Orchestration, Model Context Protocol (MCP), LLM Integration (Amazon Q, Claude, OpenAI), Agentic Automation</p>
+                        </div>
+                        <div class="skill-category">
+                            <h4>DevOps & Security</h4>
+                            <p class="skill-list">DevOps Productivity Automation, Secure SDLC & Automated Remediation, Cloud-Native Engineering (AWS, Docker, GitHub, IaC)</p>
+                        </div>
+                        <div class="skill-category">
+                            <h4>Development Stack</h4>
+                            <p class="skill-list">FastAPI, React, TypeScript, Next.js, Python, Node.js</p>
+                        </div>
+                        <div class="skill-category">
+                            <h4>Blockchain & Web3</h4>
+                            <p class="skill-list">Blockchain (Solana/Anchor, Rust, Decentralized Apps)</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h3 class="section-title">Certifications</h3>
+                    <div class="cert-item">
+                        <div class="cert-name">AWS Certified Developer Associate</div>
+                        <div class="cert-date">July 2020</div>
+                    </div>
+                    <div class="cert-item">
+                        <div class="cert-name">AWS Certified Solutions Architect Associate</div>
+                        <div class="cert-date">2020</div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h3 class="section-title">Education</h3>
+                    <div class="education-item">
+                        <div class="degree">B.Tech, Computer Engineering</div>
+                        <div class="school">Sinhgad College of Engineering, Pune</div>
+                        <div class="year">2006 – 2010</div>
+                    </div>
+                    <div class="education-item">
+                        <div class="degree">Senior Secondary Education (Science)</div>
+                        <div class="school">Delhi Public School, Ahmedabad</div>
+                        <div class="year">2003 – 2006</div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h3 class="section-title">Languages</h3>
+                    <div class="languages-grid">
+                        <div class="language-item">
+                            <span class="language-name">English</span>
+                            <span class="language-level">Fluent</span>
+                        </div>
+                        <div class="language-item">
+                            <span class="language-name">Hindi</span>
+                            <span class="language-level">Native</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+            
+            <main class="content">
+                <div class="section">
+                    <h3 class="section-title">Professional Summary</h3>
+                    <p class="professional-summary">
+                        Principal Solutions Architect & Engineering Leader with 15+ years of experience delivering enterprise-scale AI-powered automation, developer productivity platforms, and multi-agent orchestration for global technology leaders. Pioneer in Model Context Protocol (MCP) implementation, architecting MCP-driven automation servers that enable LLMs to autonomously understand, structure, and act on complex enterprise data across diverse workflows. Expert in designing AI-driven SDLC automation, vulnerability remediation systems, and self-healing test automation using advanced Python/TypeScript stacks, AWS cloud-native architectures, and Solana/Anchor blockchain technologies. Recognized for delivering 80-85% efficiency gains through intelligent automation and building high-performance engineering teams focused on agentic workflow orchestration.
+                    </p>
+                </div>
+                
+                <div class="section">
+                    <h3 class="section-title">Professional Experience</h3>
+                    
+                    <div class="experience-item">
+                        <div class="job-title">Technical Manager & ART Lead</div>
+                        <div class="company-info">Accenture, Pune, Maharashtra | September 2024 – Present</div>
+                        <div class="job-description">
+                            <ul>
+                                <li>Led AI-powered transformation for multimillion-dollar retirement portfolio, integrating automation and intelligent tooling into legacy migration and SDLC processes</li>
+                                <li>Architected and implemented MCP-driven automation servers enabling LLMs to autonomously understand, structure, and act on complex enterprise data across diverse workflows</li>
+                                <li>Delivered AI-driven SDLC automation leveraging MCP to build interaction protocols between specialized agents for code review, testing, and compliance at enterprise scale</li>
+                                <li>Designed and deployed MCP-powered vulnerability remediation servers, leveraging LLMs to autonomously identify, prioritize, and fix security vulnerabilities with end-to-end validation</li>
+                                <li>Implemented self-healing UI test automation using MCP agents integrated with LLMs to create, maintain, and repair test failures autonomously</li>
+                                <li>Enhanced developer productivity through MCP agent automation of repetitive coding tasks, seamlessly integrating with GitHub Copilot and cloud-native toolchains</li>
+                                <li>Achieved 80–85% efficiency gains in complex legacy migrations through advanced Python toolkit and AI automation pipelines</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="experience-item">
+                        <div class="job-title">AWS Migration Delivery Manager</div>
+                        <div class="company-info">Accenture, Pune, Maharashtra | May 2021 – August 2024</div>
+                        <div class="job-description">
+                            <ul>
+                                <li>Collaborated with AWS engineers to design secure, scalable client environments with infrastructure as code</li>
+                                <li>Defined RACI metrics under cloud-first program and presented architecture decisions to executive stakeholders</li>
+                                <li>Managed wave-based production application cutovers achieving zero-downtime migrations</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="experience-item">
+                        <div class="job-title">AWS Cloud Architect & Technical Lead</div>
+                        <div class="company-info">Cognizant, Pune, Maharashtra | June 2016 – May 2021</div>
+                        <div class="job-description">
+                            <ul>
+                                <li>Led Salesforce Gateway application migration to AWS with lift-and-shift and re-architecture strategies</li>
+                                <li>Designed scalable cloud-native solutions optimizing performance while implementing cost-saving measures</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="experience-item">
+                        <div class="job-title">Senior Software Engineer</div>
+                        <div class="company-info">Accenture, Pune, Maharashtra | February 2013 – June 2016</div>
+                        <div class="job-description">
+                            <ul>
+                                <li>Developed enterprise applications for contact and relationship data processing with automated monitoring</li>
+                                <li>Implemented CI/CD pipelines using GitLab and Jenkins improving deployment efficiency by 60%</li>
+                                <li>Built real-time project tracking dashboard using Angular 2.0, Java 8, and RESTful services</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="experience-item">
+                        <div class="job-title">Software Engineer</div>
+                        <div class="company-info">Inautix Technologies, Pune, Maharashtra | October 2010 – February 2013</div>
+                        <div class="job-description">
+                            <ul>
+                                <li>Developed and maintained enterprise software solutions for financial services clients</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h3 class="section-title">Key Projects & Achievements</h3>
+                    
+                    <div class="project-item">
+                        <div class="project-title">Vulnerability Remediation MCP Server</div>
+                        <p class="project-description">Led the build and deployment of an agent-based, MCP-driven automation server that autonomously identifies and remediates security issues using LLMs and integrates with enterprise DevSecOps pipelines.</p>
+                    </div>
+                    
+                    <div class="project-item">
+                        <div class="project-title">UI Test Automation Generation (MCP)</div>
+                        <p class="project-description">Engineered AI-driven, context-aware test automation using MCP agents and cloud-native technologies, reducing manual effort and improving QA speed and reliability.</p>
+                    </div>
+                    
+                    <div class="project-item">
+                        <div class="project-title">AI-Powered Multi-Agent Orchestrator Platform</div>
+                        <p class="project-description">Designed and implemented a distributed agent framework for workflow automation, integrating custom AI agents for SDLC and security processes. Enabled orchestration of agentic workflows with context-aware automation at enterprise scale.</p>
+                    </div>
+                    
+                    <div class="project-item">
+                        <div class="project-title">Claude MCP Knowledge Graph System (Personal Project)</div>
+                        <p class="project-description">Built full-stack TypeScript application with Next.js 14, Qdrant vector database, and OpenAI API integration. Implemented Model Context Protocol server enabling AI assistants to access structured knowledge graphs with real-time analytics and semantic search capabilities.</p>
+                    </div>
+                    
+                    <div class="project-item">
+                        <div class="project-title">Enterprise Blockchain & DeFi Integration (Personal Project)</div>
+                        <p class="project-description">Integrated Solana/Anchor and Rust-based automation within enterprise solutions for auditable, secure transaction management. Developed decentralized applications with real-time market data integration and secure wallet management systems.</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>
