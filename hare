@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Tortoise and the Hare</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <style>
+    :root {
+      --cream: #F0F4F0;
+      --charcoal: #1A2E1A;
+      --foam: #F0F4F0;
+      --deep: #1A2E1A;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--charcoal);
+      color: var(--cream);
+      overflow-x: hidden;
+    }
+
+    /* Custom Cursor */
+    .cursor-ring {
+      position: fixed;
+      width: 40px;
+      height: 40px;
+      border: 2px solid var(--cream);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      mix-blend-mode: difference;
+      display: none;
+    }
+
+    .cursor-dot {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background: var(--cream);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      mix-blend-mode: difference;
+      display: none;
+    }
+
+    @media (pointer: fine) {
+      .cursor-ring, .cursor-dot { display: block; }
+    }
+
+    /* Progress Bar */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--cream), var(--cream)cc);
+      transform-origin: left;
+      transform: scaleX(0);
+      z-index: 1000;
+    }
+
+    /* Spotlight Layer */
+    .spotlight-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .spotlight-layer.active {
+      opacity: 1;
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px;
+      background: var(--charcoal);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .hero-background svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .hero-title {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 400;
+      text-align: center;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      position: relative;
+      z-index: 10;
+      margin-bottom: 20px;
+    }
+
+    .hero-title .word {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(100%);
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+      font-weight: 300;
+      opacity: 0.8;
+      text-align: center;
+      max-width: 600px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      opacity: 0.6;
+    }
+
+    .scroll-indicator span {
+      display: block;
+      width: 1px;
+      height: 60px;
+      background: var(--cream);
+      margin: 0 auto;
+      animation: scrollPulse 2s infinite;
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(0.8); }
+      50% { opacity: 1; transform: scaleY(1); }
+    }
+
+    /* Chapter Sections */
+    .chapter {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 80px 60px;
+      position: relative;
+    }
+
+    .chapter.light { background: var(--cream); color: var(--charcoal); }
+    .chapter.dark { background: var(--charcoal); color: var(--cream); }
+
+    .chapter-number {
+      position: absolute;
+      top: 40px;
+      left: 60px;
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: clamp(4rem, 10vw, 10rem);
+      font-weight: 400;
+      opacity: 0.1;
+      line-height: 1;
+    }
+
+    .chapter-inner {
+      display: flex;
+      align-items: center;
+      gap: 80px;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .chapter.reverse .chapter-inner {
+      flex-direction: row-reverse;
+    }
+
+    .chapter-content {
+      flex: 1;
+    }
+
+    .chapter-label {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      opacity: 0.6;
+      margin-bottom: 20px;
+    }
+
+    .chapter-title {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 30px;
+    }
+
+    .chapter-description p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      opacity: 0.85;
+      margin-bottom: 20px;
+    }
+
+    .illustration {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .illustration svg {
+      width: 100%;
+      max-width: 500px;
+      height: auto;
+    }
+
+    /* Organic Path Animations */
+    .organic-path {
+      transition: opacity 1s ease, transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      transform-origin: center;
+    }
+
+    .fade-path { opacity: 0; }
+    .scale-path { transform: scale(0.8); opacity: 0; }
+
+    /* Transition Section */
+    .transition-section {
+      height: 120px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .transition-section.light { background: var(--cream); }
+    .transition-section.dark { background: var(--charcoal); }
+
+    .transition-line {
+      width: 2px;
+      height: 60px;
+      background: currentColor;
+      opacity: 0.3;
+    }
+
+    /* Quote Section */
+    .quote-section {
+      padding: 100px 60px;
+      text-align: center;
+    }
+
+    .quote-section.dark { background: var(--charcoal); }
+
+    .quote {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      font-style: italic;
+      line-height: 1.5;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .quote-mark {
+      font-size: 4rem;
+      opacity: 0.3;
+      line-height: 0;
+      display: block;
+      margin-bottom: 20px;
+    }
+
+    /* Finale Section */
+    .finale {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 60px;
+      background: var(--charcoal);
+      text-align: center;
+    }
+
+    .finale-illustration {
+      margin-bottom: 40px;
+    }
+
+    .finale-illustration svg {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .finale-title {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-weight: 400;
+      margin-bottom: 30px;
+    }
+
+    .finale-text {
+      font-size: 1.2rem;
+      line-height: 1.8;
+      opacity: 0.8;
+      max-width: 600px;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .chapter, .hero { padding: 40px 30px; }
+      .chapter-number { left: 30px; top: 20px; }
+      .chapter-inner { flex-direction: column !important; gap: 40px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="cursor-ring"></div>
+  <div class="cursor-dot"></div>
+  <div class="progress-bar"></div>
+  <div class="spotlight-layer"></div>
+
+  <!-- Hero Section: The Challenge -->
+  <section class="hero">
+    <div class="hero-background">
+      <svg viewBox="0 0 1000 1000" fill="none" preserveAspectRatio="xMidYMid slice">
+        <!-- Forest hills background -->
+        <path class="hero-line" fill="var(--foam)" opacity="0.06"
+          d="M0 700 Q150 600 300 650 Q450 700 600 620 Q750 540 900 600 Q1000 650 1000 700 L1000 1000 L0 1000 Z"/>
+        <path class="hero-line" fill="var(--foam)" opacity="0.04"
+          d="M0 800 Q200 750 400 780 Q600 810 800 760 Q900 740 1000 780 L1000 1000 L0 1000 Z"/>
+        <!-- Tortoise silhouette (left, slower but steady) -->
+        <g class="hero-line" opacity="0.15" transform="translate(200, 650)">
+          <ellipse cx="0" cy="20" rx="50" ry="35" fill="var(--foam)"/>
+          <circle cx="-35" cy="-5" r="20" fill="var(--foam)"/>
+          <path fill="var(--foam)" opacity="0.12"
+            d="M40 20 Q60 15 70 25 Q75 35 70 40 Q60 45 45 40 Z"/>
+        </g>
+        <!-- Hare silhouette (right, fast but arrogant) -->
+        <g class="hero-line" opacity="0.12" transform="translate(700, 620)">
+          <ellipse cx="0" cy="30" rx="25" ry="15" fill="var(--foam)"/>
+          <circle cx="-20" cy="15" r="12" fill="var(--foam)"/>
+          <!-- Ears -->
+          <ellipse cx="-25" cy="-5" rx="6" ry="25" fill="var(--foam)" opacity="0.8"/>
+          <ellipse cx="-15" cy="-8" rx="5" ry="20" fill="var(--foam)" opacity="0.8"/>
+          <!-- Motion lines -->
+          <path stroke="var(--foam)" stroke-width="2" opacity="0.3" fill="none"
+            d="M30 35 Q50 32 70 35"/>
+          <path stroke="var(--foam)" stroke-width="2" opacity="0.2" fill="none"
+            d="M35 40 Q55 37 75 40"/>
+        </g>
+        <!-- Start/Finish line in distance -->
+        <path stroke="var(--foam)" stroke-width="2" opacity="0.1" stroke-dasharray="10,10"
+          d="M450 500 L450 800"/>
+      </svg>
+    </div>
+    <h1 class="hero-title">
+      <span class="word">The</span>
+      <span class="word">Tortoise</span>
+      <span class="word">&</span>
+      <span class="word">the</span>
+      <span class="word">Hare</span>
+    </h1>
+    <p class="hero-subtitle">Aesop's timeless fable about patience, perseverance, and the dangers of arrogance.</p>
+    <div class="scroll-indicator"><span></span></div>
+  </section>
+
+  <!-- Chapter 1: The Hare's Boast (Light) -->
+  <section class="chapter light" data-chapter="1">
+    <span class="chapter-number">01</span>
+    <div class="chapter-inner">
+      <div class="chapter-content">
+        <p class="chapter-label">Chapter One</p>
+        <h2 class="chapter-title">The Boastful Hare</h2>
+        <div class="chapter-description">
+          <p>In a forest clearing, a Hare boasted about his incredible speed to all the animals. "I can run faster than the wind!" he cried, his long ears twitching with pride. "No one in this entire forest could ever defeat me in a race."</p>
+          <p>The other animals nodded politely, knowing the Hare was indeed swift. But there was one creature who didn't seem impressed—an old Tortoise who slowly munched on clover nearby.</p>
+        </div>
+      </div>
+      <div class="illustration">
+        <svg viewBox="0 0 500 500" fill="none">
+          <!-- Background grass -->
+          <path class="organic-path fade-path" fill="var(--deep)" opacity="0.05"
+            d="M0 450 Q100 430 200 445 Q300 460 400 440 Q450 430 500 445 L500 500 L0 500 Z"/>
+          <!-- Boastful hare figure -->
+          <g class="organic-path scale-path" transform="translate(250, 250)">
+            <!-- Body -->
+            <ellipse cx="0" cy="20" rx="50" ry="30" fill="var(--deep)" opacity="0.6"/>
+            <!-- Head -->
+            <circle cx="-40" cy="0" r="22" fill="var(--deep)" opacity="0.7"/>
+            <!-- Long ears (upright in boast) -->
+            <ellipse cx="-50" cy="-40" rx="8" ry="35" fill="var(--deep)" opacity="0.7"/>
+            <ellipse cx="-35" cy="-45" rx="7" ry="30" fill="var(--deep)" opacity="0.7"/>
+            <!-- Arms spread wide boasting -->
+            <path fill="var(--deep)" opacity="0.5"
+              d="M-30 20 Q-50 0 -70 -10 Q-75 -15 -70 -20 Q-50 -10 -25 5 Z"/>
+            <path fill="var(--deep)" opacity="0.5"
+              d="M20 20 Q50 5 70 -5 Q75 -10 75 -5 Q55 5 25 15 Z"/>
+          </g>
+          <!-- Motion lines showing speed -->
+          <path class="organic-path fade-path" stroke="var(--deep)" stroke-width="3" opacity="0.3" fill="none"
+            d="M350 280 Q380 270 420 275"/>
+          <path class="organic-path fade-path" stroke="var(--deep)" stroke-width="2" opacity="0.2" fill="none"
+            d="M360 300 Q390 290 430 295"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- Transition -->
+  <div class="transition-section light"><div class="transition-line"></div></div>
+
+  <!-- Chapter 2: The Challenge (Dark) -->
+  <section class="chapter dark" data-chapter="2">
+    <span class="chapter-number">02</span>
+    <div class="chapter-inner reverse">
+      <div class="chapter-content">
+        <p class="chapter-label">Chapter Two</p>
+        <h2 class="chapter-title">The Challenge Accepted</h2>
+        <div class="chapter-description">
+          <p>The Tortoise slowly raised his head and spoke in a calm, steady voice. "I accept your challenge, Hare. Though I am slow, I am determined. Let us race to the edge of the forest."</p>
+          <p>The Hare laughed until his sides ached. "You? Race me?" he gasped. "This will be the easiest victory I've ever known!" But the Tortoise only nodded, his eyes calm and unwavering.</p>
+        </div>
+      </div>
+      <div class="illustration">
+        <svg viewBox="0 0 500 500" fill="none">
+          <!-- Dark forest atmosphere -->
+          <path class="organic-path fade-path" fill="var(--foam)" opacity="0.08"
+            d="M0 400 Q80 380 160 395 Q240 410 320 385 Q400 360 500 390 L500 500 L0 500 Z"/>
+          <path class="organic-path fade-path" fill="var(--foam)" opacity="0.05"
+            d="M0 440 Q120 420 240 435 Q360 450 500 420 L500 500 L0 500 Z"/>
+          <!-- Tortoise figure (determined) -->
+          <g class="organic-path scale-path" transform="translate(150, 300)">
+            <ellipse cx="0" cy="25" rx="55" ry="40" fill="var(--foam)" opacity="0.5"/>
+            <circle cx="-40" cy="0" r="22" fill="var(--foam)" opacity="0.6"/>
+            <!-- Small legs -->
+            <ellipse cx="-35" cy="50" rx="12" ry="8" fill="var(--foam)" opacity="0.4"/>
+            <ellipse cx="35" cy="50" rx="12" ry="8" fill="var(--foam)" opacity="0.4"/>
+          </g>
+          <!-- Hare figure (arrogant, larger) -->
+          <g class="organic-path scale-path" transform="translate(350, 250) scale(1.2)">
+            <ellipse cx="0" cy="20" rx="45" ry="25" fill="var(--foam)" opacity="0.4"/>
+            <circle cx="-35" cy="5" r="18" fill="var(--foam)" opacity="0.5"/>
+            <!-- Laughing pose -->
+            <ellipse cx="-45" cy="-25" rx="6" ry="28" fill="var(--foam)" opacity="0.5"
+              transform="rotate(-15 -45 -25)"/>
+            <ellipse cx="-30" cy="-30" rx="5" ry="24" fill="var(--foam)" opacity="0.5"
+              transform="rotate(10 -30 -30)"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- Transition -->
+  <div class="transition-section dark"><div class="transition-line"></div></div>
+
+  <!-- Chapter 3: The Race Begins (Light) -->
+  <section class="chapter light" data-chapter="3">
+    <span class="chapter-number">03</span>
+    <div class="chapter-inner">
+      <div class="chapter-content">
+        <p class="chapter-label">Chapter Three</p>
+        <h2 class="chapter-title">The Race Begins</h2>
+        <div class="chapter-description">
+          <p>The race began with a burst! The Hare sprinted ahead, disappearing in a blur of fur and motion. Within moments, he was far out of sight, confident of his inevitable victory.</p>
+          <p>The Tortoise plodded forward, one slow step at a time. His pace was steady, measured, unchanging. He did not look back, did not worry about the distance. He simply continued on.</p>
+        </div>
+      </div>
+      <div class="illustration">
+        <svg viewBox="0 0 500 500" fill="none">
+          <!-- Path/road -->
+          <path class="organic-path fade-path" fill="var(--deep)" opacity="0.06"
+            d="M0 500 Q100 450 200 460 Q300 470 400 450 Q450 440 500 450 L500 500 L0 500 Z"/>
+          <!-- Distant finish line -->
+          <path stroke="var(--deep)" stroke-width="3" opacity="0.1" stroke-dasharray="8,8"
+            d="M350 200 L350 450"/>
+          <!-- Tortoise (steady progress) -->
+          <g class="organic-path scale-path" transform="translate(200, 380)">
+            <ellipse cx="0" cy="25" rx="50" ry="35" fill="var(--deep)" opacity="0.5"/>
+            <circle cx="-35" cy="5" r="18" fill="var(--deep)" opacity="0.6"/>
+            <!-- Legs in motion -->
+            <ellipse cx="-30" cy="50" rx="10" ry="7" fill="var(--deep)" opacity="0.4"/>
+            <ellipse cx="30" cy="48" rx="10" ry="7" fill="var(--deep)" opacity="0.4"/>
+          </g>
+          <!-- Hare (distant blur) -->
+          <g class="organic-path fade-path" transform="translate(400, 320)" opacity="0.3">
+            <ellipse cx="0" cy="15" rx="30" ry="18" fill="var(--deep)"/>
+            <circle cx="-20" cy="5" r="12" fill="var(--deep)"/>
+            <!-- Motion blur -->
+            <path fill="var(--deep)" opacity="0.2" d="M-40 30 Q-60 25 -80 30 Q-85 32 -80 35 Q-60 30 -40 32 Z"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- Transition -->
+  <div class="transition-section light"><div class="transition-line"></div></div>
+
+  <!-- Chapter 4: The Victory (Dark) -->
+  <section class="chapter dark" data-chapter="4">
+    <span class="chapter-number">04</span>
+    <div class="chapter-inner reverse">
+      <div class="chapter-content">
+        <p class="chapter-label">Chapter Four</p>
+        <h2 class="chapter-title">Slow and Steady Wins</h2>
+        <div class="chapter-description">
+          <p>Feeling confident, the Hare decided to rest. "I have so much time," he yawned, curling up beneath a shady oak. "A short nap, then an easy victory."</p>
+          <p>While the Hare slept, the Tortoise continued. Step by step, slow but steady, he moved past the sleeping Hare, past the halfway mark, ever onward.</p>
+          <p>When the Hare awoke, the finish line was in sight—but the Tortoise was already there, waiting calmly. The forest animals cheered: "Slow and steady wins the race!"</p>
+        </div>
+      </div>
+      <div class="illustration">
+        <svg viewBox="0 0 500 500" fill="none">
+          <!-- Victory radiance -->
+          <g class="organic-path fade-path" opacity="0.08" transform="translate(250, 200)">
+            <circle fill="var(--foam)" r="120"/>
+            <circle fill="var(--foam)" opacity="0.7" r="90"/>
+            <circle fill="var(--foam)" opacity="0.5" r="60"/>
+          </g>
+          <!-- Triumphant Tortoise at finish -->
+          <g class="organic-path scale-path" transform="translate(250, 300)">
+            <ellipse cx="0" cy="20" rx="50" ry="35" fill="var(--foam)" opacity="0.6"/>
+            <circle cx="-35" cy="0" r="20" fill="var(--foam)" opacity="0.7"/>
+            <!-- Crown/victory leaves -->
+            <path fill="var(--foam)" opacity="0.5"
+              d="M-50 -15 Q-40 -35 -30 -20 Q-20 -40 -10 -25 Q0 -45 10 -25 Q20 -40 30 -20 Q40 -35 50 -15 Q40 0 20 -5 Q0 -10 -20 -5 Q-40 0 -50 -15 Z"/>
+          </g>
+          <!-- Finish line tape -->
+          <path stroke="var(--foam)" stroke-width="4" opacity="0.4"
+            d="M100 380 L400 380"/>
+          <path stroke="var(--foam)" stroke-width="2" stroke-dasharray="5,5" opacity="0.3"
+            d="M100 370 L400 370 M100 390 L400 390"/>
+          <!-- Sleeping Hare in background (defeated) -->
+          <g class="organic-path fade-path" transform="translate(380, 420)" opacity="0.25">
+            <ellipse cx="0" cy="10" rx="35" ry="20" fill="var(--foam)"/>
+            <circle cx="-25" cy="0" r="14" fill="var(--foam)"/>
+            <!-- Z's for sleeping -->
+            <text fill="var(--foam)" opacity="0.3" font-size="20" x="20" y="-15">Z</text>
+            <text fill="var(--foam)" opacity="0.2" font-size="16" x="35" y="-25">Z</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quote Section -->
+  <section class="quote-section dark">
+    <blockquote class="quote">
+      <span class="quote-mark">"</span>
+      Slow and steady wins the race.
+    </blockquote>
+  </section>
+
+  <!-- Finale -->
+  <section class="finale">
+    <div class="finale-illustration">
+      <svg viewBox="0 0 400 400" fill="none">
+        <!-- Radiating light rays -->
+        <g class="organic-path fade-path" opacity="0.1">
+          <path fill="var(--foam)" d="M200 50 L220 150 L180 150 Z"/>
+          <path fill="var(--foam)" d="M350 200 L250 220 L250 180 Z"/>
+          <path fill="var(--foam)" d="M200 350 L180 250 L220 250 Z"/>
+          <path fill="var(--foam)" d="M50 200 L150 180 L150 220 Z"/>
+        </g>
+        <!-- Concentric victory rings -->
+        <circle class="organic-path scale-path" fill="none" stroke="var(--foam)" stroke-width="2" opacity="0.15"
+          cx="200" cy="200" r="100"/>
+        <circle class="organic-path scale-path" fill="none" stroke="var(--foam)" stroke-width="2" opacity="0.1"
+          cx="200" cy="200" r="140"/>
+        <circle class="organic-path scale-path" fill="none" stroke="var(--foam)" stroke-width="1" opacity="0.08"
+          cx="200" cy="200" r="170"/>
+        <!-- Laurel wreath symbol -->
+        <g class="organic-path scale-path" transform="translate(200, 200)">
+          <path fill="var(--foam)" opacity="0.5"
+            d="M0 -60 Q20 -80 40 -60 Q50 -40 30 -20 Q10 -10 0 -5 Q-10 -10 -30 -20 Q-50 -40 -40 -60 Q-20 -80 0 -60 Z"/>
+          <path fill="var(--foam)" opacity="0.5"
+            d="M0 60 Q20 80 40 60 Q50 40 30 20 Q10 10 0 5 Q-10 10 -30 20 Q-50 40 -40 60 Q-20 80 0 60 Z"/>
+          <path fill="var(--foam)" opacity="0.5"
+            d="M-60 0 Q-80 -20 -60 -40 Q-40 -50 -20 -30 Q-10 -10 -5 0 Q-10 10 -20 30 Q-40 50 -60 40 Q-80 20 -60 0 Z"/>
+          <path fill="var(--foam)" opacity="0.5"
+            d="M60 0 Q80 -20 60 -40 Q40 -50 20 -30 Q10 -10 5 0 Q10 10 20 30 Q40 50 60 40 Q80 20 60 0 Z"/>
+          <!-- Center dot -->
+          <circle fill="var(--foam)" opacity="0.6" r="8"/>
+        </g>
+      </svg>
+    </div>
+    <h2 class="finale-title">The Moral</h2>
+    <p class="finale-text">The race is not always to the swift—but to those who keep going. Patience, perseverance, and humility triumph over arrogance and haste.</p>
+  </section>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Custom cursor
+    const cursorRing = document.querySelector('.cursor-ring');
+    const cursorDot = document.querySelector('.cursor-dot');
+    let cursorX = 0, cursorY = 0;
+    let dotX = 0, dotY = 0;
+    let mouseX = 0, mouseY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    function animateCursor() {
+      cursorX += (mouseX - cursorX) * 0.15;
+      cursorY += (mouseY - cursorY) * 0.15;
+      dotX += (mouseX - dotX) * 0.4;
+      dotY += (mouseY - dotY) * 0.4;
+
+      cursorRing.style.left = cursorX - 20 + 'px';
+      cursorRing.style.top = cursorY - 20 + 'px';
+      cursorDot.style.left = dotX - 4 + 'px';
+      cursorDot.style.top = dotY - 4 + 'px';
+
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+    // Spotlight effect
+    const spotlightLayer = document.querySelector('.spotlight-layer');
+
+    function updateSpotlight() {
+      const gradient = `radial-gradient(circle 150px at ${mouseX}px ${mouseY}px, rgba(240,244,240,0.15) 0%, transparent 70%)`;
+      spotlightLayer.style.background = gradient;
+      requestAnimationFrame(updateSpotlight);
+    }
+    updateSpotlight();
+
+    const spotlightObserver = new IntersectionObserver((entries) => {
+      let anyDarkVisible = entries.some(e => e.isIntersecting && e.intersectionRatio > 0.3);
+      spotlightLayer.classList.toggle('active', anyDarkVisible);
+    }, { threshold: [0, 0.3, 0.6, 1] });
+
+    document.querySelectorAll('.chapter.dark').forEach(ch => spotlightObserver.observe(ch));
+
+    // Hero title reveal
+    gsap.to('.hero-title .word', {
+      y: 0,
+      opacity: 1,
+      duration: 1,
+      stagger: 0.1,
+      ease: 'power3.out',
+      delay: 0.5
+    });
+
+    // Progress bar
+    gsap.to('.progress-bar', {
+      scaleX: 1,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: 'body',
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.3
+      }
+    });
+
+    // Chapter animations
+    gsap.utils.toArray('.chapter').forEach((chapter, i) => {
+      const paths = chapter.querySelectorAll('.organic-path');
+
+      paths.forEach(path => {
+        const opacity = path.getAttribute('opacity') || '0.5';
+        path.style.setProperty('--target-opacity', opacity);
+        gsap.set(path, { opacity: 0, scale: i % 2 === 0 ? 0.8 : 1 });
+      });
+
+      gsap.to(paths, {
+        opacity: (i, target) => target.style.getPropertyValue('--target-opacity'),
+        scale: 1,
+        duration: 1,
+        stagger: 0.15,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: chapter,
+          start: 'top 70%'
+        }
+      });
+    });
+
+    // Finale animation
+    gsap.from('.finale-illustration .organic-path', {
+      opacity: 0,
+      scale: 0.8,
+      duration: 1.2,
+      stagger: 0.2,
+      ease: 'back.out(1.7)',
+      scrollTrigger: {
+        trigger: '.finale',
+        start: 'top 60%'
+      }
+    });
+  </script>
+</body>
+</html>
