@@ -1,109 +1,1064 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AadhaarChain - Secure Identity Management</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-        }
-        header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 60px 20px;
-            text-align: center;
-        }
-        h1 {
-            font-size: 3em;
-            margin-bottom: 10px;
-        }
-        .tagline {
-            font-size: 1.2em;
-            opacity: 0.9;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin: 40px 0;
-        }
-        .feature {
-            background: #f8f9fa;
-            padding: 30px;
-            border-radius: 8px;
-            text-align: center;
-        }
-        .feature h3 {
-            color: #667eea;
-            margin-bottom: 15px;
-        }
-        .btn {
-            display: inline-block;
-            background: #667eea;
-            color: white;
-            padding: 12px 30px;
-            border-radius: 5px;
-            text-decoration: none;
-            margin-top: 20px;
-            transition: background 0.3s;
-        }
-        .btn:hover {
-            background: #764ba2;
-        }
-        footer {
-            background: #333;
-            color: white;
-            text-align: center;
-            padding: 20px;
-            margin-top: 60px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AadhaarChain - Own Your Identity, Globally</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --cream: #FAF9F5;
+      --charcoal: #141413;
+      --cursor-color: rgba(20, 20, 19, 0.5);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--cream);
+      color: var(--charcoal);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ==================== PROGRESS BAR ==================== */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: var(--charcoal);
+      width: 0%;
+      z-index: 1000;
+      transform-origin: left;
+    }
+
+    /* ==================== SPOTLIGHT ==================== */
+    .spotlight-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 500;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      background: radial-gradient(circle 300px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(250, 249, 245, 0.1) 0%, transparent 70%);
+    }
+
+    .spotlight-layer.active {
+      opacity: 1;
+    }
+
+    /* ==================== CUSTOM CURSOR ==================== */
+    .cursor-outer, .cursor-inner {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      border-radius: 50%;
+    }
+
+    .cursor-outer {
+      width: 40px;
+      height: 40px;
+      border: 2px solid var(--charcoal);
+      opacity: 0.5;
+      mix-blend-mode: difference;
+    }
+
+    .cursor-inner {
+      width: 8px;
+      height: 8px;
+      background: var(--charcoal);
+      opacity: 0.8;
+    }
+
+    @media (hover: none) {
+      .cursor-outer, .cursor-inner {
+        display: none;
+      }
+    }
+
+    /* ==================== TYPOGRAPHY ==================== */
+    h1, h2, h3 {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+    }
+
+    h1 {
+      font-size: clamp(3rem, 12vw, 8rem);
+      line-height: 1;
+      margin-bottom: 1.5rem;
+    }
+
+    h2 {
+      font-size: clamp(2rem, 6vw, 4.5rem);
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+    }
+
+    p {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      line-height: 1.8;
+      max-width: 600px;
+    }
+
+    .label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      opacity: 0.5;
+      margin-bottom: 0.75rem;
+    }
+
+    /* ==================== HERO ==================== */
+    .hero {
+      min-height: 100vh;
+      background: var(--cream);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 2rem;
+      overflow: hidden;
+    }
+
+    .hero-title {
+      text-align: center;
+      position: relative;
+      z-index: 10;
+    }
+
+    .hero-title .line {
+      display: block;
+    }
+
+    .word {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(100%);
+      margin: 0 0.12em;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+      text-align: center;
+      max-width: 700px;
+      margin-top: 2rem;
+      opacity: 0;
+      font-weight: 300;
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2rem;
+      opacity: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+
+    .scroll-indicator svg {
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+
+    /* ==================== SECTIONS ==================== */
+    section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 6rem 2rem;
+    }
+
+    .light {
+      background: var(--cream);
+      color: var(--charcoal);
+    }
+
+    .dark {
+      background: var(--charcoal);
+      color: var(--cream);
+    }
+
+    /* ==================== CHAPTER STYLES ==================== */
+    .chapter {
+      position: relative;
+    }
+
+    .chapter-number {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: clamp(8rem, 25vw, 20rem);
+      font-weight: 400;
+      position: absolute;
+      top: 0;
+      left: 0;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .light .chapter-number {
+      color: var(--charcoal);
+      opacity: 0.04;
+    }
+
+    .dark .chapter-number {
+      color: var(--cream);
+      opacity: 0.04;
+    }
+
+    .chapter-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+      max-width: 1400px;
+      width: 100%;
+      position: relative;
+      z-index: 2;
+    }
+
+    .dark .chapter-inner {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .chapter-content {
+      padding: 2rem;
+    }
+
+    .chapter-title {
+      color: inherit;
+    }
+
+    .chapter-description {
+      margin-top: 2rem;
+      opacity: 0.85;
+    }
+
+    .chapter-description p {
+      margin-bottom: 1.5rem;
+    }
+
+    .highlight {
+      font-weight: 500;
+      position: relative;
+      display: inline-block;
+    }
+
+    .illustration {
+      position: relative;
+      height: 500px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .illustration svg {
+      width: 100%;
+      height: 100%;
+      max-width: 550px;
+    }
+
+    .organic-path {
+      opacity: 0;
+      transform-origin: center;
+    }
+
+    /* Hero scene SVG initial states */
+    .fragmented-identity .organic-path {
+      opacity: 0;
+    }
+
+    .unified-identity .organic-path {
+      opacity: 0;
+      transform-origin: center;
+    }
+
+    /* ==================== FINALE ==================== */
+    .finale {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 4rem;
+      padding: 8rem 2rem;
+    }
+
+    .finale-illustration {
+      width: 350px;
+      height: 350px;
+    }
+
+    .cta-button {
+      display: inline-block;
+      padding: 1.25rem 3rem;
+      background: var(--charcoal);
+      color: var(--cream);
+      border: 2px solid var(--charcoal);
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 0.05em;
+      border-radius: 2px;
+    }
+
+    .dark .cta-button {
+      background: var(--cream);
+      color: var(--charcoal);
+      border-color: var(--cream);
+    }
+
+    .cta-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    /* ==================== RESPONSIVE ==================== */
+    @media (max-width: 968px) {
+      .chapter-inner {
+        grid-template-columns: 1fr;
+        gap: 4rem;
+      }
+
+      .chapter-number {
+        font-size: 5rem;
+      }
+
+      .illustration {
+        height: 350px;
+      }
+
+      .chapter-description p {
+        max-width: 100%;
+      }
+    }
+
+    /* ==================== ACCESSIBILITY ==================== */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>AadhaarChain</h1>
-        <p class="tagline">Decentralized Identity Management on Solana Blockchain</p>
-    </header>
-    
-    <div class="container">
-        <h2 style="text-align: center; margin: 40px 0;">Features</h2>
-        <div class="features">
-            <div class="feature">
-                <h3>🔒 Secure</h3>
-                <p>Military-grade encryption and blockchain security to protect your identity data.</p>
-            </div>
-            <div class="feature">
-                <h3>⚡ Fast</h3>
-                <p>Lightning-fast transactions on Solana blockchain for instant verification.</p>
-            </div>
-            <div class="feature">
-                <h3>🌍 Decentralized</h3>
-                <p>Your identity is yours. No centralized authority controls your data.</p>
-            </div>
-        </div>
-        
-        <div style="text-align: center; margin: 60px 0;">
-            <h2>Get Started Today</h2>
-            <p>Join the revolution in identity management</p>
-            <a href="#" class="btn">Launch App</a>
-        </div>
+  <!-- Progress Bar -->
+  <div class="progress-bar"></div>
+
+  <!-- Spotlight -->
+  <div class="spotlight-layer"></div>
+
+  <!-- Custom Cursor -->
+  <div class="cursor-outer"></div>
+  <div class="cursor-inner"></div>
+
+  <!-- ==================== HERO ==================== -->
+  <section class="hero">
+    <!-- Hero Contrast Scene SVG -->
+    <div class="hero-scene">
+      <svg viewBox="0 0 1000 1000" fill="none" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; opacity: 0.12; pointer-events: none;">
+        <!-- LEFT: Fragmented Identity (scattered, disconnected pieces) -->
+        <g class="fragmented-identity">
+          <!-- Fragment 1 - floating piece -->
+          <path class="organic-path" d="M 150 300 Q 130 320 140 360 L 160 400 Q 170 420 195 415 L 210 375 Q 215 335 195 315 Z" fill="#141413" opacity="0.15"/>
+          <!-- Fragment 2 - floating piece -->
+          <path class="organic-path" d="M 280 250 Q 265 270 275 310 L 295 350 Q 305 370 330 365 L 345 325 Q 350 285 330 265 Z" fill="#141413" opacity="0.12"/>
+          <!-- Fragment 3 - floating piece -->
+          <path class="organic-path" d="M 180 500 Q 165 520 175 560 L 195 600 Q 205 620 230 615 L 245 575 Q 250 535 230 515 Z" fill="#141413" opacity="0.10"/>
+          <!-- Fragment 4 - floating piece -->
+          <path class="organic-path" d="M 320 550 Q 300 570 315 610 L 340 650 Q 355 670 380 660 L 395 620 Q 400 580 380 560 Z" fill="#141413" opacity="0.13"/>
+          <!-- Fragment 5 - floating piece -->
+          <path class="organic-path" d="M 250 700 Q 235 720 245 760 L 265 800 Q 275 820 300 815 L 315 775 Q 320 735 300 715 Z" fill="#141413" opacity="0.11"/>
+          <!-- Disconnection lines showing fragmentation -->
+          <path class="organic-path" d="M 210 360 Q 230 380 250 400" fill="none" stroke="#141413" stroke-width="1" opacity="0.06"/>
+          <path class="organic-path" d="M 330 300 Q 350 320 370 340" fill="none" stroke="#141413" stroke-width="1" opacity="0.06"/>
+          <path class="organic-path" d="M 230 570 Q 250 590 270 610" fill="none" stroke="#141413" stroke-width="1" opacity="0.06"/>
+        </g>
+
+        <!-- RIGHT: Unified Identity (connected, radiant, possibility) -->
+        <g class="unified-identity">
+          <!-- Central unified core -->
+          <path class="organic-path" d="M 700 400 Q 660 430 675 490 Q 695 550 770 560 Q 845 550 865 490 Q 880 430 840 400 Z" fill="#141413" opacity="0.18"/>
+          <!-- Radiating possibility lines (outward flow) -->
+          <path class="organic-path" d="M 770 320 Q 800 380 770 440" fill="none" stroke="#141413" stroke-width="2" opacity="0.10"/>
+          <path class="organic-path" d="M 770 680 Q 800 620 770 560" fill="none" stroke="#141413" stroke-width="2" opacity="0.10"/>
+          <path class="organic-path" d="M 620 480 Q 680 510 740 500" fill="none" stroke="#141413" stroke-width="2" opacity="0.10"/>
+          <path class="organic-path" d="M 920 480 Q 860 510 800 500" fill="none" stroke="#141413" stroke-width="2" opacity="0.10"/>
+          <!-- Secondary radiance (softer outer waves) -->
+          <path class="organic-path" d="M 650 350 Q 700 400 750 450" fill="none" stroke="#141413" stroke-width="1.5" opacity="0.07"/>
+          <path class="organic-path" d="M 890 350 Q 840 400 790 450" fill="none" stroke="#141413" stroke-width="1.5" opacity="0.07"/>
+          <path class="organic-path" d="M 650 610 Q 700 560 750 520" fill="none" stroke="#141413" stroke-width="1.5" opacity="0.07"/>
+          <path class="organic-path" d="M 890 610 Q 840 560 790 520" fill="none" stroke="#141413" stroke-width="1.5" opacity="0.07"/>
+          <!-- Outer light burst (possibility radiating) -->
+          <path class="organic-path" d="M 580 420 Q 650 460 720 440" fill="none" stroke="#141413" stroke-width="1" opacity="0.05"/>
+          <path class="organic-path" d="M 960 420 Q 890 460 820 440" fill="none" stroke="#141413" stroke-width="1" opacity="0.05"/>
+          <path class="organic-path" d="M 580 580 Q 650 540 720 560" fill="none" stroke="#141413" stroke-width="1" opacity="0.05"/>
+          <path class="organic-path" d="M 960 580 Q 890 540 820 560" fill="none" stroke="#141413" stroke-width="1" opacity="0.05"/>
+        </g>
+
+        <!-- Atmospheric bridge (transition from left to right) -->
+        <path class="organic-path" d="M 450 500 Q 500 480 550 500" fill="none" stroke="#141413" stroke-width="1.5" opacity="0.04"/>
+        <path class="organic-path" d="M 470 450 Q 520 430 570 450" fill="none" stroke="#141413" stroke-width="1" opacity="0.03"/>
+        <path class="organic-path" d="M 470 550 Q 520 570 570 550" fill="none" stroke="#141413" stroke-width="1" opacity="0.03"/>
+      </svg>
     </div>
-    
-    <footer>
-        <p>&copy; 2025 AadhaarChain. All rights reserved. | Powered by Solana Blockchain</p>
-    </footer>
+
+    <h1 class="hero-title">
+      <span class="line"><span class="word">Imagine</span></span>
+      <span class="line"><span class="word">a world</span></span>
+      <span class="line"><span class="word">where</span></span>
+      <span class="line"><span class="word">identity</span></span>
+      <span class="line"><span class="word">travels</span></span>
+      <span class="line"><span class="word">freely.</span></span>
+    </h1>
+
+    <p class="hero-subtitle">
+      Government-grade verification meets self-sovereign ownership—<br>
+      unlocking human potential across borders, forever.
+    </p>
+
+    <div class="scroll-indicator">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M12 16V8M12 16L16 12M12 16L8 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- ==================== CHAPTER 1: THE VISION ==================== -->
+  <section class="chapter light">
+    <span class="chapter-number">01</span>
+    <div class="chapter-inner">
+      <div class="chapter-content">
+        <p class="label">The Vision</p>
+        <h2 class="chapter-title">One identity.<br>Infinite possibility.</h2>
+        <div class="chapter-description">
+          <p>For the first time in history, we can separate <strong>verification</strong> from <strong>control</strong>.</p>
+          <p>Imagine proving who you are—once, with government-grade certainty—then carrying that proof across every service, every border, every opportunity. Without repeating KYC. Without surrendering data. Without asking permission.</p>
+          <p>Your identity becomes your superpower.</p>
+        </div>
+      </div>
+      <div class="illustration">
+        <svg viewBox="0 0 500 500" fill="none">
+          <!-- Central identity core -->
+          <path class="organic-path" d="M 200 200 Q 160 220 170 270 Q 185 310 250 320 Q 315 310 330 270 Q 340 220 300 200 Z" fill="#141413" opacity="0.9"/>
+          <!-- Radiating possibility lines -->
+          <path class="organic-path" d="M 250 150 Q 270 190 250 250" fill="none" stroke="#141413" stroke-width="2" opacity="0.4"/>
+          <path class="organic-path" d="M 250 350 Q 270 310 250 250" fill="none" stroke="#141413" stroke-width="2" opacity="0.4"/>
+          <path class="organic-path" d="M 150 250 Q 190 270 250 250" fill="none" stroke="#141413" stroke-width="2" opacity="0.4"/>
+          <path class="organic-path" d="M 350 250 Q 310 270 250 250" fill="none" stroke="#141413" stroke-width="2" opacity="0.4"/>
+          <path class="organic-path" d="M 165 165 Q 200 200 250 250" fill="none" stroke="#141413" stroke-width="1.5" opacity="0.3"/>
+          <path class="organic-path" d="M 335 165 Q 300 200 250 250" fill="none" stroke="#141413" stroke-width="1.5" opacity="0.3"/>
+          <path class="organic-path" d="M 165 335 Q 200 300 250 250" fill="none" stroke="#141413" stroke-width="1.5" opacity="0.3"/>
+          <path class="organic-path" d="M 335 335 Q 300 300 250 250" fill="none" stroke="#141413" stroke-width="1.5" opacity="0.3"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CHAPTER 2: THE TECHNOLOGY ==================== -->
+  <section class="chapter dark">
+    <span class="chapter-number">02</span>
+    <div class="chapter-inner">
+      <div class="illustration">
+        <svg viewBox="0 0 500 500" fill="none">
+          <!-- Aadhaar document -->
+          <path class="organic-path" d="M 60 100 Q 40 120 50 170 L 80 220 Q 95 240 125 230 L 140 170 Q 145 120 115 105 Z" fill="#FAF9F5" opacity="0.8"/>
+          <!-- Flow to blockchain -->
+          <path class="organic-path" d="M 150 170 Q 200 160 250 165" fill="none" stroke="#FAF9F5" stroke-width="3" opacity="0.6"/>
+          <!-- Blockchain ledger -->
+          <path class="organic-path" d="M 270 100 Q 250 120 260 160 L 320 175 Q 350 170 350 130 L 330 105 Z" fill="#FAF9F5" opacity="0.7"/>
+          <!-- Blockchain block 2 -->
+          <path class="organic-path" d="M 330 180 Q 315 200 325 240 L 365 255 Q 385 250 385 210 L 365 185 Z" fill="#FAF9F5" opacity="0.6"/>
+          <!-- Credential emerges -->
+          <path class="organic-path" d="M 150 300 Q 120 330 135 380 Q 160 410 210 400 Q 240 380 230 330 Z" fill="#FAF9F5" opacity="0.5"/>
+          <!-- Connection arrow -->
+          <path class="organic-path" d="M 350 260 Q 360 310 280 340" fill="none" stroke="#FAF9F5" stroke-width="2" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="chapter-content">
+        <p class="label">The Technology</p>
+        <h2 class="chapter-title">Architecture of trust.</h2>
+        <div class="chapter-description">
+          <p><strong>Aadhaar verification</strong> flows through encrypted channels to the Solana blockchain, where cryptographic proofs lock your identity into an immutable record.</p>
+          <p>No company holds your data. No database can be breached. You hold the keys. You grant access. You revoke it anytime.</p>
+          <p>This is <strong>zero-knowledge infrastructure</strong>—proving truth without revealing secrets.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CHAPTER 3: THE IMPACT ==================== -->
+  <section class="chapter light">
+    <span class="chapter-number">03</span>
+    <div class="chapter-inner">
+      <div class="chapter-content">
+        <p class="label">The Impact</p>
+        <h2 class="chapter-title">Breaking barriers.<br>Enabling dreams.</h2>
+        <div class="chapter-description">
+          <p><strong>1.4 billion Indians</strong> gain global identity portability. <strong>32 million NRIs</strong> prove credentials without embassy visits.</p>
+          <p><strong>Banks</strong> verify customers in 2 seconds, not 2 days. <strong>Fintechs</strong> cut KYC costs by 90%. <strong>Enterprises</strong> access verified users instantly.</p>
+          <p>The estimated market: <strong>$52 billion globally</strong>. But the real value is human—financial inclusion accelerated, borders erased, opportunity democratized.</p>
+        </div>
+      </div>
+      <div class="illustration">
+        <svg viewBox="0 0 500 500" fill="none">
+          <!-- Upward trajectory -->
+          <path class="organic-path" d="M 100 420 Q 150 370 200 320 Q 260 260 320 180 Q 370 110 430 60" fill="none" stroke="#141413" stroke-width="4" opacity="0.7"/>
+          <!-- Milestone markers -->
+          <path class="organic-path" d="M 90 420 Q 80 405 95 395 L 110 405 Z" fill="#141413" opacity="0.9"/>
+          <path class="organic-path" d="M 190 320 Q 180 305 195 295 L 210 305 Z" fill="#141413" opacity="0.9"/>
+          <path class="organic-path" d="M 310 180 Q 300 165 315 155 L 330 165 Z" fill="#141413" opacity="0.9"/>
+          <path class="organic-path" d="M 420 60 Q 410 45 425 35 L 440 45 Z" fill="#141413" opacity="0.9"/>
+          <!-- Impact radiance -->
+          <path class="organic-path" d="M 265 130 Q 280 160 265 190" fill="none" stroke="#141413" stroke-width="1.5" opacity="0.3"/>
+          <path class="organic-path" d="M 345 140 Q 360 170 345 200" fill="none" stroke="#141413" stroke-width="1.5" opacity="0.3"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CHAPTER 4: THE REVOLUTION ==================== -->
+  <section class="chapter dark">
+    <span class="chapter-number">04</span>
+    <div class="chapter-inner">
+      <div class="illustration">
+        <svg viewBox="0 0 500 500" fill="none">
+          <!-- Converging network -->
+          <path class="organic-path" d="M 250 230 Q 210 250 220 300 Q 240 330 290 320 Q 330 300 320 250 Z" fill="#FAF9F5" opacity="0.9"/>
+          <!-- Connected entities -->
+          <path class="organic-path" d="M 80 120 Q 60 140 75 180 Q 95 200 130 190 L 145 140 Q 140 110 110 105 Z" fill="#FAF9F5" opacity="0.7"/>
+          <path class="organic-path" d="M 355 100 Q 340 115 350 155 Q 370 175 405 165 Q 420 145 410 115 Z" fill="#FAF9F5" opacity="0.6"/>
+          <path class="organic-path" d="M 370 340 Q 350 360 365 400 Q 385 420 420 410 L 430 365 Z" fill="#FAF9F5" opacity="0.7"/>
+          <path class="organic-path" d="M 80 350 Q 65 370 80 410 Q 105 425 140 415 Q 155 390 145 355 Z" fill="#FAF9F5" opacity="0.6"/>
+          <!-- Network connections -->
+          <path class="organic-path" d="M 150 150 Q 190 180 250 230" fill="none" stroke="#FAF9F5" stroke-width="2" opacity="0.4"/>
+          <path class="organic-path" d="M 360 130 Q 320 170 280 230" fill="none" stroke="#FAF9F5" stroke-width="2" opacity="0.4"/>
+          <path class="organic-path" d="M 390 370 Q 350 340 300 290" fill="none" stroke="#FAF9F5" stroke-width="2" opacity="0.4"/>
+          <path class="organic-path" d="M 130 390 Q 170 360 220 310" fill="none" stroke="#FAF9F5" stroke-width="2" opacity="0.4"/>
+        </svg>
+      </div>
+      <div class="chapter-content">
+        <p class="label">The Revolution</p>
+        <h2 class="chapter-title">An identity<br>renaissance.</h2>
+        <div class="chapter-description">
+          <p>We're not just building technology. We're catalyzing a shift in how humanity thinks about <strong>ownership</strong> of self.</p>
+          <p>Your identity shouldn't be trapped in silos. It shouldn't be sold without consent. It shouldn't require endless repetition.</p>
+          <p>Join us in creating the world's first <strong>government-grade self-sovereign identity platform</strong>—where 1.4 billion people become truly free to move, to work, to live anywhere on Earth.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FINALE ==================== -->
+  <section class="finale dark">
+    <div class="finale-illustration">
+      <svg viewBox="0 0 500 500" fill="none">
+        <!-- Central unified identity -->
+        <path class="organic-path" d="M 180 180 Q 140 200 155 260 Q 180 320 250 330 Q 320 320 345 260 Q 360 200 320 180 Z" fill="#FAF9F5" opacity="0.95"/>
+        <!-- Expanding circles (global reach) -->
+        <path class="organic-path" d="M 250 50 Q 300 120 280 190" fill="none" stroke="#FAF9F5" stroke-width="2" opacity="0.5"/>
+        <path class="organic-path" d="M 250 450 Q 300 380 280 310" fill="none" stroke="#FAF9F5" stroke-width="2" opacity="0.5"/>
+        <path class="organic-path" d="M 50 250 Q 120 300 190 280" fill="none" stroke="#FAF9F5" stroke-width="2" opacity="0.5"/>
+        <path class="organic-path" d="M 450 250 Q 380 300 310 280" fill="none" stroke="#FAF9F5" stroke-width="2" opacity="0.5"/>
+        <!-- Radiant outward flow -->
+        <path class="organic-path" d="M 120 120 Q 170 170 250 250" fill="none" stroke="#FAF9F5" stroke-width="1.5" opacity="0.4"/>
+        <path class="organic-path" d="M 380 120 Q 330 170 250 250" fill="none" stroke="#FAF9F5" stroke-width="1.5" opacity="0.4"/>
+        <path class="organic-path" d="M 120 380 Q 170 330 250 250" fill="none" stroke="#FAF9F5" stroke-width="1.5" opacity="0.4"/>
+        <path class="organic-path" d="M 380 380 Q 330 330 250 250" fill="none" stroke="#FAF9F5" stroke-width="1.5" opacity="0.4"/>
+      </svg>
+    </div>
+
+    <div style="text-align: center; max-width: 700px;">
+      <p class="label">Ready for the future?</p>
+      <h2>Own Your Identity.<br>Change Everything.</h2>
+      <p style="margin-top: 2rem; font-size: 1.125rem; opacity: 0.9;">
+        AadhaarChain is bringing self-sovereign identity to India and the world.
+        <br>The revolution starts with you.
+      </p>
+      <a href="#" class="cta-button">Join the Revolution</a>
+    </div>
+  </section>
+
+  <!-- ==================== SCRIPTS ==================== -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <script>
+    // ==================== CUSTOM CURSOR ====================
+    const cursorOuter = document.querySelector('.cursor-outer');
+    const cursorInner = document.querySelector('.cursor-inner');
+    const spotlightLayer = document.querySelector('.spotlight-layer');
+
+    let cursorX = 0, cursorY = 0;
+    let dotX = 0, dotY = 0;
+    let mouseX = 0, mouseY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+
+      // Update spotlight gradient position
+      spotlightLayer.style.setProperty('--mouse-x', mouseX + 'px');
+      spotlightLayer.style.setProperty('--mouse-y', mouseY + 'px');
+    });
+
+    function updateCursor() {
+      cursorX += (mouseX - cursorX) * 0.15;
+      cursorY += (mouseY - cursorY) * 0.15;
+      dotX += (mouseX - dotX) * 0.4;
+      dotY += (mouseY - dotY) * 0.4;
+
+      cursorOuter.style.left = cursorX - 20 + 'px';
+      cursorOuter.style.top = cursorY - 20 + 'px';
+      cursorInner.style.left = dotX - 4 + 'px';
+      cursorInner.style.top = dotY - 4 + 'px';
+
+      requestAnimationFrame(updateCursor);
+    }
+    updateCursor();
+
+    // ==================== REGISTER GSAP ====================
+    gsap.registerPlugin(ScrollTrigger);
+
+    // ==================== PROGRESS BAR ====================
+    gsap.to('.progress-bar', {
+      scaleX: 1,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: 'body',
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.3
+      }
+    });
+
+    // ==================== HERO ANIMATIONS ====================
+    const heroTl = gsap.timeline();
+
+    // LEFT: Fragmented identity fades in (subtle, atmospheric)
+    heroTl.to('.fragmented-identity .organic-path', {
+      opacity: 0.15,
+      duration: 1.2,
+      stagger: 0.15,
+      ease: 'power2.out'
+    }, 0);
+
+    // RIGHT: Unified identity glows and radiates (hopeful, aspirational)
+    heroTl.to('.unified-identity .organic-path:nth-child(1)', {
+      opacity: 0.18,
+      scale: 1,
+      duration: 0.8,
+      ease: 'back.out(1.3)'
+    }, 0.3) // Central core appears
+    .to('.unified-identity .organic-path:nth-of-type(n+2):nth-of-type(-n+5)', {
+      strokeDasharray: 200,
+      strokeDashoffset: 200,
+      opacity: 0.10,
+      duration: 1,
+      ease: 'power2.inOut'
+    }, 0.3) // Set initial radiance
+    .to('.unified-identity .organic-path:nth-of-type(n+2):nth-of-type(-n+5)', {
+      strokeDashoffset: 0,
+      duration: 1.2,
+      stagger: 0.1,
+      ease: 'power2.inOut'
+    }, 0.4) // Radiance draws outward
+    .to('.unified-identity .organic-path:nth-of-type(n+6):nth-of-type(-n+9)', {
+      strokeDasharray: 150,
+      strokeDashoffset: 150,
+      opacity: 0.07,
+      duration: 1,
+      ease: 'power2.inOut'
+    }, 0.3) // Set secondary waves
+    .to('.unified-identity .organic-path:nth-of-type(n+6):nth-of-type(-n+9)', {
+      strokeDashoffset: 0,
+      duration: 1,
+      stagger: 0.08,
+      ease: 'power2.inOut'
+    }, 0.5) // Secondary waves draw
+    .to('.unified-identity .organic-path:nth-of-type(n+10)', {
+      strokeDasharray: 150,
+      strokeDashoffset: 0,
+      opacity: 0.05,
+      duration: 0.8,
+      stagger: 0.06,
+      ease: 'power2.inOut'
+    }, 0.6); // Outer light burst
+
+    // Atmospheric bridge fades in gently
+    heroTl.to('.hero-scene svg > .organic-path:last-of-type', {
+      opacity: 0.04,
+      duration: 1.5,
+      ease: 'sine.inOut'
+    }, 0.2)
+    .to('.hero-scene svg > .organic-path:nth-last-of-type(2)', {
+      opacity: 0.03,
+      duration: 1.5,
+      ease: 'sine.inOut'
+    }, 0.2)
+    .to('.hero-scene svg > .organic-path:nth-last-of-type(3)', {
+      opacity: 0.03,
+      duration: 1.5,
+      ease: 'sine.inOut'
+    }, 0.2);
+
+    // Title words reveal (overlaid on scene)
+    heroTl.to('.hero-title .word', {
+      y: 0,
+      opacity: 1,
+      duration: 1.2,
+      stagger: 0.06,
+      ease: 'power3.out'
+    }, 0.4);
+
+    heroTl.to('.hero-subtitle', {
+      opacity: 1,
+      duration: 1,
+      ease: 'power2.inOut'
+    }, 0.7);
+
+    heroTl.to('.scroll-indicator', {
+      opacity: 1,
+      duration: 0.8,
+      ease: 'power2.inOut'
+    }, 0.9);
+
+    // ==================== CHAPTER 1: VISION ====================
+    const chapter1 = document.querySelector('.chapter.light');
+    if (chapter1) {
+      // Content fade in
+      gsap.set(chapter1.querySelector('.chapter-content'), { opacity: 0, x: -50 });
+      gsap.to(chapter1.querySelector('.chapter-content'), {
+        opacity: 1,
+        x: 0,
+        duration: 1,
+        scrollTrigger: {
+          trigger: chapter1,
+          start: 'top 70%'
+        }
+      });
+
+      // SVG: Central core appears, then radiating lines draw
+      const ch1SvgTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: chapter1.querySelector('.illustration'),
+          start: 'top 70%',
+          once: true
+        }
+      });
+
+      ch1SvgTl.to(chapter1.querySelectorAll('.illustration .organic-path')[0], {
+        opacity: 0.9,
+        scale: 1,
+        duration: 0.8,
+        ease: 'back.out(1.7)'
+      });
+
+      // Initialize and animate stroke paths
+      const ch1StrokePaths = chapter1.querySelectorAll('.illustration svg path[stroke]');
+      ch1StrokePaths.forEach(path => {
+        const length = path.getTotalLength();
+        path.style.strokeDasharray = length;
+        path.style.strokeDashoffset = length;
+      });
+
+      ch1SvgTl.to(ch1StrokePaths, {
+        strokeDashoffset: 0,
+        opacity: 0.4,
+        duration: 1.2,
+        stagger: 0.15,
+        ease: 'power2.inOut'
+      }, 0.2);
+    }
+
+    // ==================== CHAPTER 2: TECHNOLOGY ====================
+    const chapter2 = document.querySelector('.chapter.dark');
+    if (chapter2) {
+      gsap.set(chapter2.querySelector('.chapter-content'), { opacity: 0, x: 50 });
+      gsap.to(chapter2.querySelector('.chapter-content'), {
+        opacity: 1,
+        x: 0,
+        duration: 1,
+        scrollTrigger: {
+          trigger: chapter2,
+          start: 'top 70%'
+        }
+      });
+
+      const ch2SvgTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: chapter2.querySelector('.illustration'),
+          start: 'top 70%',
+          once: true
+        }
+      });
+
+      const ch2Paths = chapter2.querySelectorAll('.illustration .organic-path');
+      // Sequential flow
+      ch2SvgTl.to(ch2Paths[0], {
+        opacity: 0.8,
+        scale: 1,
+        duration: 0.7,
+        ease: 'power3.out'
+      })
+      .to(ch2Paths[1], {
+        strokeDasharray: 150,
+        strokeDashoffset: 150,
+        opacity: 0.6,
+        duration: 0.8,
+        ease: 'power2.inOut'
+      }, 0.2)
+      .to(ch2Paths[1], {
+        strokeDashoffset: 0,
+        duration: 0.8,
+        ease: 'power2.inOut'
+      }, 0.2)
+      .to(ch2Paths[2], {
+        opacity: 0.7,
+        scale: 1,
+        duration: 0.6,
+        ease: 'back.out(1.5)'
+      }, 0.5)
+      .to(ch2Paths[3], {
+        opacity: 0.6,
+        duration: 0.6,
+        ease: 'power3.out'
+      }, 0.7)
+      .to(ch2Paths[4], {
+        opacity: 0.5,
+        scale: 1,
+        duration: 0.6,
+        ease: 'back.out(1.5)'
+      }, 0.9)
+      .to(ch2Paths[5], {
+        strokeDasharray: 200,
+        strokeDashoffset: 0,
+        opacity: 0.5,
+        duration: 0.8,
+        ease: 'power2.inOut'
+      }, 1.0);
+    }
+
+    // ==================== CHAPTER 3: IMPACT ====================
+    const chapter3 = document.querySelectorAll('.chapter.light')[1];
+    if (chapter3) {
+      gsap.set(chapter3.querySelector('.chapter-content'), { opacity: 0, x: -50 });
+      gsap.to(chapter3.querySelector('.chapter-content'), {
+        opacity: 1,
+        x: 0,
+        duration: 1,
+        scrollTrigger: {
+          trigger: chapter3,
+          start: 'top 70%'
+        }
+      });
+
+      const ch3SvgTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: chapter3.querySelector('.illustration'),
+          start: 'top 70%',
+          once: true
+        }
+      });
+
+      const ch3Paths = chapter3.querySelectorAll('.illustration .organic-path');
+      // Trajectory line draws, then markers appear
+      ch3SvgTl.to(ch3Paths[0], {
+        strokeDasharray: 600,
+        strokeDashoffset: 600,
+        opacity: 0.7,
+        duration: 1.5,
+        ease: 'power3.inOut'
+      })
+      .to(ch3Paths[0], {
+        strokeDashoffset: 0,
+        duration: 1.5,
+        ease: 'power3.inOut'
+      }, 0)
+      .to([ch3Paths[1], ch3Paths[2], ch3Paths[3], ch3Paths[4]], {
+        opacity: 0.9,
+        scale: 1,
+        duration: 0.5,
+        stagger: 0.2,
+        ease: 'elastic.out(1.2, 0.5)'
+      }, 0.8);
+    }
+
+    // ==================== CHAPTER 4: REVOLUTION ====================
+    const chapter4 = document.querySelectorAll('.chapter.dark')[1];
+    if (chapter4) {
+      gsap.set(chapter4.querySelector('.chapter-content'), { opacity: 0, x: 50 });
+      gsap.to(chapter4.querySelector('.chapter-content'), {
+        opacity: 1,
+        x: 0,
+        duration: 1,
+        scrollTrigger: {
+          trigger: chapter4,
+          start: 'top 70%'
+        }
+      });
+
+      const ch4SvgTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: chapter4.querySelector('.illustration'),
+          start: 'top 70%',
+          once: true
+        }
+      });
+
+      const ch4Paths = chapter4.querySelectorAll('.illustration .organic-path');
+      // Central hub appears, then network nodes connect
+      ch4SvgTl.to(ch4Paths[0], {
+        opacity: 0.9,
+        scale: 1,
+        duration: 0.8,
+        ease: 'back.out(2)'
+      })
+      .to(ch4Paths[1], {
+        opacity: 0.7,
+        scale: 1,
+        duration: 0.5,
+        ease: 'back.out(1.5)'
+      }, 0.3)
+      .to(ch4Paths[2], {
+        opacity: 0.6,
+        scale: 1,
+        duration: 0.5,
+        ease: 'back.out(1.5)'
+      }, 0.4)
+      .to(ch4Paths[3], {
+        opacity: 0.7,
+        scale: 1,
+        duration: 0.5,
+        ease: 'back.out(1.5)'
+      }, 0.5)
+      .to(ch4Paths[4], {
+        opacity: 0.6,
+        scale: 1,
+        duration: 0.5,
+        ease: 'back.out(1.5)'
+      }, 0.6);
+
+      // Animate connection lines
+      const ch4StrokePaths = chapter4.querySelectorAll('.illustration svg path[stroke]');
+      ch4SvgTl.to(ch4StrokePaths, {
+        strokeDasharray: 200,
+        strokeDashoffset: 0,
+        opacity: 0.4,
+        duration: 1,
+        stagger: 0.15,
+        ease: 'power2.inOut'
+      }, 0.7);
+    }
+
+    // ==================== FINALE ====================
+    gsap.from('.finale-illustration', {
+      opacity: 0,
+      scale: 0.85,
+      duration: 1.2,
+      scrollTrigger: {
+        trigger: '.finale',
+        start: 'top 70%'
+      }
+    });
+
+    gsap.from('.finale > div:last-child', {
+      opacity: 0,
+      y: 40,
+      duration: 1,
+      scrollTrigger: {
+        trigger: '.finale',
+        start: 'top 60%'
+      }
+    });
+
+    // Finale SVG: Core appears, radiating circles draw
+    const finaleSvgTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '.finale-illustration',
+        start: 'top 70%',
+        once: true
+      }
+    });
+
+    finaleSvgTl.to('.finale-illustration .organic-path:nth-child(1)', {
+      opacity: 0.95,
+      scale: 1,
+      duration: 0.8,
+      ease: 'back.out(2)'
+    })
+    .to('.finale-illustration svg path[stroke]', {
+      strokeDasharray: 300,
+      strokeDashoffset: 0,
+      opacity: 0.5,
+      duration: 1.2,
+      stagger: 0.12,
+      ease: 'power2.inOut'
+    }, 0.3);
+
+    // ==================== PARALLAX CHAPTER NUMBERS ====================
+    gsap.utils.toArray('.chapter-number').forEach((num) => {
+      gsap.to(num, {
+        y: 80,
+        opacity: 0.02,
+        scrollTrigger: {
+          trigger: num.parentElement,
+          start: 'top center',
+          end: 'bottom center',
+          scrub: 1
+        }
+      });
+    });
+
+    // ==================== SPOTLIGHT ON DARK SECTIONS ====================
+    const spotlightObserver = new IntersectionObserver((entries) => {
+      let anyDarkVisible = entries.some(e =>
+        e.isIntersecting && e.intersectionRatio > 0.2
+      );
+      spotlightLayer.classList.toggle('active', anyDarkVisible);
+    }, { threshold: [0, 0.2, 0.4, 0.6, 0.8, 1] });
+
+    document.querySelectorAll('.dark').forEach(section => {
+      spotlightObserver.observe(section);
+    });
+
+    // Initialize all SVG stroke paths
+    document.querySelectorAll('svg path[stroke]').forEach(path => {
+      const length = path.getTotalLength();
+      path.style.strokeDasharray = length;
+      path.style.strokeDashoffset = length;
+    });
+  </script>
 </body>
 </html>
