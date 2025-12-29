@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ramayana - The Epic Journey</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ice: #FAF9F5;
+      --navy: #141413;
+      --foam: #FAF9F5;
+      --deep: #141413;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--navy);
+      color: var(--ice);
+      overflow-x: hidden;
+    }
+
+    /* Custom Cursor */
+    .cursor-ring {
+      position: fixed;
+      width: 40px;
+      height: 40px;
+      border: 2px solid var(--ice);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      mix-blend-mode: difference;
+      display: none;
+    }
+
+    .cursor-dot {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background: var(--ice);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      mix-blend-mode: difference;
+      display: none;
+    }
+
+    @media (pointer: fine) {
+      .cursor-ring, .cursor-dot { display: block; }
+    }
+
+    /* Progress Bar */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--ice), var(--ice)cc);
+      transform-origin: left;
+      transform: scaleX(0);
+      z-index: 1000;
+    }
+
+    /* Spotlight Layer */
+    .spotlight-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .spotlight-layer.active {
+      opacity: 1;
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero { background: var(--navy); }
+    .hero.light-hero { background: var(--foam); }
+    .hero.light-hero .hero-title { color: var(--deep); }
+    .hero.light-hero .hero-subtitle { color: rgba(20, 20, 19, 0.8); }
+
+    .hero-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .hero-line {
+      animation-duration: 20s;
+      animation-iteration-count: infinite;
+      animation-timing-function: ease-in-out;
+      animation-name: float;
+    }
+
+    .hero-flow {
+      stroke-dasharray: 20 30;
+      animation: flow-dash 30s linear infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    @keyframes flow-dash {
+      0% { stroke-dashoffset: 0; }
+      100% { stroke-dashoffset: -1000; }
+    }
+
+    .hero-content {
+      text-align: center;
+      max-width: 900px;
+      z-index: 2;
+      position: relative;
+    }
+
+    .hero-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 30px;
+      color: var(--ice);
+    }
+
+    .hero-title .line { display: block; }
+    .hero-title .word {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(30px);
+      margin: 0 0.1em;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1rem, 2vw, 1.5rem);
+      color: rgba(232, 244, 248, 0.8);
+      font-weight: 300;
+      line-height: 1.6;
+      margin-bottom: 50px;
+      opacity: 0;
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+    }
+
+    .scroll-indicator span {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #141413;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to bottom, var(--deep), transparent);
+    }
+
+    @keyframes scroll-bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(10px); }
+    }
+
+    /* Chapter Sections */
+    .chapter {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 80px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chapter.light { background: var(--foam); color: var(--deep); }
+    .chapter.dark { background: var(--deep); color: var(--foam); }
+
+    .chapter-number {
+      position: absolute;
+      top: 60px;
+      left: 60px;
+      font-size: 3rem;
+      font-weight: 300;
+      opacity: 0.15;
+      font-family: 'Instrument Serif', serif;
+    }
+
+    .chapter-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .chapter.dark .chapter-inner.reverse {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .chapter-content {
+      /* Initial state handled by GSAP */
+    }
+
+    .chapter-label {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      opacity: 0.6;
+      margin-bottom: 15px;
+      font-weight: 500;
+    }
+
+    .chapter-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+      margin-bottom: 25px;
+    }
+
+    .chapter-description {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      opacity: 0.85;
+    }
+
+    .chapter-description p { margin-bottom: 15px; }
+
+    /* Illustration */
+    .illustration {
+      position: relative;
+      height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .illustration svg {
+      width: 100%;
+      height: 100%;
+      max-width: 500px;
+      max-height: 500px;
+    }
+
+    /* Transition Section */
+    .transition-section {
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--navy);
+    }
+
+    .transition-line {
+      width: 1px;
+      height: 0;
+      background: var(--deep);
+      opacity: 0.2;
+    }
+
+    /* Quote Section */
+    .quote-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 60px;
+    }
+    .quote-section { background: var(--deep); color: var(--foam); }
+    .quote-section.light-quote { background: var(--foam); color: var(--deep); }
+
+    .quote {
+      max-width: 800px;
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 400;
+      line-height: 1.6;
+      text-align: center;
+      position: relative;
+    }
+
+    .quote-mark {
+      font-size: 4rem;
+      opacity: 0.3;
+      display: block;
+      margin-bottom: 20px;
+    }
+
+    /* Finale */
+    .finale {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 60px;
+      text-align: center;
+    }
+    .finale { background: var(--deep); color: var(--foam); }
+    .finale.light-finale { background: var(--foam); color: var(--deep); }
+
+    .finale-rings {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      margin-bottom: 60px;
+    }
+
+    .ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 2px solid var(--foam);
+      border-radius: 50%;
+      opacity: 0.3;
+    }
+
+    .finale-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+      margin-bottom: 30px;
+    }
+
+    .finale-text {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      max-width: 600px;
+      opacity: 0.8;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .chapter-inner { grid-template-columns: 1fr; }
+      .chapter { padding: 60px 30px; }
+      .hero { padding: 40px 30px; }
+      .chapter-number { left: 30px; }
+      @media (pointer: coarse) {
+        .cursor-ring, .cursor-dot { display: none; }
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+
+    /* SVG Animation Classes */
+    .organic-path {
+      transform-origin: center;
+    }
+
+    .fade-path {
+      opacity: 0;
+      transition: opacity 1s ease-out;
+    }
+
+    .fade-path.animated {
+      opacity: 1;
+    }
+
+    .scale-path {
+      opacity: 0;
+      transform: scale(0.8);
+      transform-origin: center;
+      transition: opacity 1s ease-out, transform 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .scale-path.animated {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .draw-path {
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Cursor -->
+  <div class="cursor-ring"></div>
+  <div class="cursor-dot"></div>
+
+  <!-- Progress Bar -->
+  <div class="progress-bar"></div>
+
+  <!-- Spotlight Layer -->
+  <svg class="spotlight-layer">
+    <defs>
+      <radialGradient id="spotlight-grad">
+        <stop offset="0%" stop-color="var(--foam)" stop-opacity="0.08"/>
+        <stop offset="100%" stop-color="transparent"/>
+      </radialGradient>
+    </defs>
+    <circle id="spotlight-circle" r="200" fill="url(#spotlight-grad)"/>
+  </svg>
+
+  <!-- Hero Section -->
+  <section class="hero light-hero">
+    <!-- Hero Background SVG - Rama vs Ravana (David vs Goliath pattern - fully organic) -->
+    <svg class="hero-background" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice">
+      <!-- Distant hills - organic paths (dark on light bg) -->
+      <path class="hero-line" fill="var(--deep)" opacity="0.06"
+        d="M0 600 Q150 500 300 550 Q450 600 600 520 Q750 440 900 500 Q950 520 1000 550 L1000 1000 L0 1000 Z"/>
+      <path class="hero-line" fill="var(--deep)" opacity="0.04"
+        d="M0 700 Q200 650 400 680 Q600 710 800 660 Q900 640 970 670 L1000 690 L1000 1000 L0 1000 Z"/>
+
+      <!-- Rama - small figure on left - organic paths -->
+      <g class="hero-line" opacity="0.12">
+        <!-- Body -->
+        <path fill="var(--deep)" d="M180 750 Q190 715 200 715 Q210 715 220 750 Q210 785 200 785 Q190 785 180 750 Z"/>
+        <!-- Head -->
+        <path fill="var(--deep)" d="M188 705 Q194 693 200 693 Q206 693 212 705 Q206 717 200 717 Q194 717 188 705 Z"/>
+        <!-- Divine bow hint - organic filled path -->
+        <path fill="var(--deep)" opacity="0.08" d="M150 750 Q170 715 200 695 Q205 698 200 700 Q175 718 155 752 Q152 751 150 750 Z"/>
+        <!-- Bow string - organic filled path -->
+        <path fill="var(--deep)" opacity="0.06" d="M198 695 Q200 720 200 760 Q199 760 199 695 Z"/>
+      </g>
+
+      <!-- Ravana - giant silhouette on right - organic paths -->
+      <g class="hero-line" opacity="0.15">
+        <!-- Massive body - organic path -->
+        <path fill="var(--deep)"
+          d="M750 550 Q780 520 820 530 Q860 540 880 580 Q900 640 890 720 Q880 780 850 800 Q800 820 760 800 Q720 780 710 720 Q700 640 710 580 Q720 550 750 550 Z"/>
+        <!-- Main head - organic path -->
+        <path fill="var(--deep)" d="M765 510 Q780 465 800 465 Q820 465 835 510 Q820 555 800 555 Q780 555 765 510 Z"/>
+        <!-- Secondary heads hint - organic paths -->
+        <path fill="var(--deep)" opacity="0.8" d="M715 530 Q730 500 740 500 Q750 500 765 530 Q750 560 740 560 Q730 560 715 530 Z"/>
+        <path fill="var(--deep)" opacity="0.7" d="M838 525 Q850 497 860 497 Q870 497 882 525 Q870 553 860 553 Q850 553 838 525 Z"/>
+      </g>
+
+      <!-- Dramatic vertical line separating them - organic filled path -->
+      <path fill="var(--deep)" opacity="0.08" d="M499 300 Q501 300 501 600 L501 900 Q499 900 499 300 Z"/>
+
+      <!-- Subtle stars/divine light - organic paths -->
+      <path fill="var(--deep)" opacity="0.15" d="M497 200 Q500 197 503 200 Q500 203 497 200 Z"/>
+      <path fill="var(--deep)" opacity="0.1" d="M478 250 Q480 248 482 250 Q480 252 478 250 Z"/>
+      <path fill="var(--deep)" opacity="0.1" d="M518 230 Q520 228 522 230 Q520 232 518 230 Z"/>
+    </svg>
+
+    <div class="hero-content">
+      <h1 class="hero-title">
+        <span class="line">
+          <span class="word">The</span>
+          <span class="word">Epic</span>
+          <span class="word">Journey</span>
+        </span>
+        <span class="line">
+          <span class="word">of</span>
+          <span class="word">Rama</span>
+        </span>
+      </h1>
+      <p class="hero-subtitle">An ancient tale of duty, devotion, and triumph over darkness</p>
+    </div>
+    <div class="scroll-indicator">
+      <span>Scroll to explore</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- Chapter 1: The Exile -->
+  <section class="chapter dark">
+    <span class="chapter-number">01</span>
+    <div class="chapter-inner">
+      <div class="chapter-content">
+        <p class="chapter-label">Chapter One</p>
+        <h2 class="chapter-title">The Noble Exile</h2>
+        <div class="chapter-description">
+          <p>Bound by his father's sacred vow, Prince Rama accepts fourteen years of banishment to the forest. His wife Sita and brother Lakshmana refuse to leave his side, choosing the path of duty over comfort.</p>
+          <p>Together, they renounce the palace riches and embark on a journey that will test their devotion and transform them forever.</p>
+        </div>
+      </div>
+      <div class="illustration">
+        <svg viewBox="0 0 500 500" fill="none">
+          <!-- Palace in background (fading behind) - organic paths -->
+          <path class="organic-path fade-path" fill="var(--foam)" opacity="0.08"
+            d="M360 180 L410 180 L410 250 Q400 250 385 250 Q370 250 360 250 Z"/>
+          <path class="organic-path fade-path" fill="var(--foam)" opacity="0.08"
+            d="M360 180 Q372 160 385 150 Q398 160 410 180 Z"/>
+
+          <!-- Winding path away from palace - organic stroke-like filled path -->
+          <path class="organic-path fade-path" fill="var(--foam)" opacity="0.15"
+            d="M380 250 Q300 280 200 260 Q100 240 50 300 Q52 305 55 305 Q105 250 200 268 Q300 290 380 260 Z"/>
+
+          <!-- Three figures walking away (bodies + heads) - organic paths -->
+          <g class="organic-path scale-path" opacity="0.5">
+            <!-- Rama (largest) -->
+            <path fill="var(--foam)" d="M185 220 Q185 210 200 210 Q215 210 215 220 Q215 235 200 235 Q185 235 185 220 Z"/>
+            <path fill="var(--foam)" d="M185 235 Q175 250 180 265 Q185 275 200 275 Q215 275 220 265 Q225 250 215 235 Q200 245 185 235 Z"/>
+            <!-- Sita -->
+            <path fill="var(--foam)" d="M150 235 Q150 225 160 225 Q170 225 170 235 Q170 245 160 245 Q150 245 150 235 Z"/>
+            <path fill="var(--foam)" d="M148 240 Q142 252 145 262 Q150 270 160 270 Q170 270 175 262 Q178 252 172 240 Q160 248 148 240 Z"/>
+            <!-- Lakshmana -->
+            <path fill="var(--foam)" d="M229 228 Q229 217 240 217 Q251 217 251 228 Q251 239 240 239 Q229 239 229 228 Z"/>
+            <path fill="var(--foam)" d="M226 233 Q218 248 222 260 Q228 270 240 270 Q252 270 258 260 Q262 248 254 233 Q240 244 226 233 Z"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- Transition -->
+  <div class="transition-section">
+    <div class="transition-line"></div>
+  </div>
+
+  <!-- Chapter 2: Forest Life -->
+  <section class="chapter light">
+    <span class="chapter-number">02</span>
+    <div class="chapter-inner reverse">
+      <div class="illustration">
+        <svg viewBox="0 0 500 500" fill="none">
+          <!-- Trees - organic canopies and trunks -->
+          <g class="organic-path fade-path" opacity="0.12">
+            <path fill="var(--deep)" d="M25 300 Q40 255 70 255 Q100 255 115 300 Q100 330 70 345 Q40 330 25 300 Z"/>
+            <path fill="var(--deep)" d="M62 345 Q70 345 78 345 L78 400 Q70 400 62 400 Z"/>
+          </g>
+          <g class="organic-path fade-path" opacity="0.14">
+            <path fill="var(--deep)" d="M85 280 Q100 225 140 225 Q180 225 195 280 Q180 320 140 335 Q100 320 85 280 Z"/>
+            <path fill="var(--deep)" d="M130 335 Q140 335 150 335 L150 410 Q140 410 130 410 Z"/>
+          </g>
+          <g class="organic-path fade-path" opacity="0.11">
+            <path fill="var(--deep)" d="M310 290 Q330 240 360 240 Q390 240 410 290 Q390 325 360 340 Q330 325 310 290 Z"/>
+            <path fill="var(--deep)" d="M352 340 Q360 340 368 340 L368 400 Q360 400 352 400 Z"/>
+          </g>
+          <g class="organic-path fade-path" opacity="0.10">
+            <path fill="var(--deep)" d="M390 310 Q405 270 430 270 Q455 270 470 310 Q455 345 430 350 Q405 345 390 310 Z"/>
+            <path fill="var(--deep)" d="M423 350 Q430 350 437 350 L437 400 Q430 400 423 400 Z"/>
+          </g>
+
+          <!-- Hermitage hut - organic roof and door -->
+          <g class="organic-path scale-path" opacity="0.22">
+            <path fill="var(--deep)" d="M210 370 Q230 330 250 320 Q270 330 290 370 Q270 360 250 365 Q230 360 210 370 Z"/>
+            <path fill="var(--foam)" opacity="0.5" d="M235 355 Q240 355 250 355 Q260 355 265 355 L265 370 Q260 370 250 370 Q240 370 235 370 Z"/>
+          </g>
+        </svg>
+      </div>
+      <div class="chapter-content">
+        <p class="chapter-label">Chapter Two</p>
+        <h2 class="chapter-title">Life in Dandaka</h2>
+        <div class="chapter-description">
+          <p>Deep in the Dandaka forest, Rama, Sita, and Lakshmana build a humble hermitage. They live as ascetics, clad in bark and deerskin, finding peace in simplicity.</p>
+          <p>Rama protects the sages from demons, earning their blessings. Sita finds beauty in the wild flowers and birds. Yet shadows gather as the demoness Surpanakha's obsession with Rama sets tragedy in motion.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Transition -->
+  <div class="transition-section">
+    <div class="transition-line"></div>
+  </div>
+
+  <!-- Chapter 3: The Abduction -->
+  <section class="chapter dark">
+    <span class="chapter-number">03</span>
+    <div class="chapter-inner">
+      <div class="chapter-content">
+        <p class="chapter-label">Chapter Three</p>
+        <h2 class="chapter-title">The Golden Deer</h2>
+        <div class="chapter-description">
+          <p>A golden deer of mesmerizing beauty appears near their hermitage. Sita, enchanted by its radiance, begs Rama to capture it. Lakshmana senses deception but follows Rama's command to protect Sita alone.</p>
+          <p>With Rama and Lakshmana away, the demon king Ravana arrives in disguise. When Sita rejects him, he reveals his terrible form and abducts her, soaring across the skies toward Lanka as Jatayu the vulture vainly attempts rescue.</p>
+        </div>
+      </div>
+      <div class="illustration">
+        <svg viewBox="0 0 500 500" fill="none">
+          <!-- Golden deer (body + head) - organic paths -->
+          <g class="organic-path scale-path" opacity="0.35">
+            <path fill="var(--foam)" d="M115 350 Q130 328 150 328 Q170 328 185 350 Q170 372 150 372 Q130 372 115 350 Z"/>
+            <path fill="var(--foam)" d="M105 340 Q110 325 120 325 Q130 325 135 340 Q130 355 120 355 Q110 355 105 340 Z"/>
+            <!-- Antlers hint - organic path -->
+            <path fill="var(--foam)" d="M112 325 Q108 310 100 295 Q105 300 110 310 Q115 300 112 295 L115 325 Z"/>
+          </g>
+
+          <!-- Flying chariot carrying Sita - organic paths -->
+          <g class="organic-path fade-path" opacity="0.22">
+            <path fill="var(--foam)" d="M340 140 Q360 120 380 120 Q400 120 420 140 Q400 160 380 160 Q360 160 340 140 Z"/>
+            <!-- Wings - organic paths -->
+            <path fill="var(--foam)" opacity="0.7" d="M315 135 Q330 123 340 135 Q330 147 315 135 Z"/>
+            <path fill="var(--foam)" opacity="0.7" d="M420 135 Q430 123 445 135 Q430 147 420 135 Z"/>
+          </g>
+
+          <!-- Flight trail across sky - organic filled path -->
+          <path class="organic-path fade-path" fill="var(--foam)" opacity="0.10"
+            d="M100 180 Q200 140 300 160 Q380 180 450 130 Q448 132 446 134 Q376 184 298 164 Q200 144 102 182 Z"/>
+
+          <!-- Fallen Jatayu - organic path -->
+          <path class="organic-path fade-path" fill="var(--foam)" opacity="0.12"
+            d="M60 400 Q70 388 80 388 Q90 388 100 400 Q90 412 80 412 Q70 412 60 400 Z"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- Transition -->
+  <div class="transition-section">
+    <div class="transition-line"></div>
+  </div>
+
+  <!-- Chapter 4: The Great Battle -->
+  <section class="chapter light">
+    <span class="chapter-number">04</span>
+    <div class="chapter-inner reverse">
+      <div class="illustration">
+        <svg viewBox="0 0 500 500" fill="none">
+          <!-- Divine bow (arc + string) - organic filled paths -->
+          <path class="organic-path fade-path" fill="var(--deep)" opacity="0.22"
+            d="M70 340 Q110 180 160 150 Q210 180 250 340 Q230 335 160 335 Q90 335 70 340 Z"/>
+          <path class="organic-path fade-path" fill="var(--deep)" opacity="0.12"
+            d="M155 150 Q160 145 165 150 L165 380 Q160 385 155 380 Z"/>
+
+          <!-- Arrow (Brahmastra) - organic filled paths -->
+          <g class="organic-path scale-path" opacity="0.35">
+            <path fill="var(--deep)" d="M180 250 Q270 235 360 200 Q362 205 360 210 Q270 243 180 258 Z"/>
+            <path fill="var(--deep)" d="M355 195 Q365 198 370 200 Q365 202 355 205 Z"/>
+            <!-- Glow - organic path -->
+            <path fill="var(--deep)" opacity="0.12" d="M235 219 Q270 213 305 219 Q270 237 235 219 Z"/>
+          </g>
+
+          <!-- Ravana's heads (5 visible) - organic paths -->
+          <path class="organic-path fade-path" fill="var(--deep)" opacity="0.14"
+            d="M358 160 Q370 138 380 160 Q370 182 358 160 Z"/>
+          <path class="organic-path fade-path" fill="var(--deep)" opacity="0.12"
+            d="M332 190 Q350 172 350 190 Q350 208 332 190 Z"/>
+          <path class="organic-path fade-path" fill="var(--deep)" opacity="0.11"
+            d="M394 185 Q410 169 426 185 Q410 201 394 185 Z"/>
+          <path class="organic-path fade-path" fill="var(--deep)" opacity="0.08"
+            d="M351 140 Q365 126 365 140 Q365 154 351 140 Z"/>
+          <path class="organic-path fade-path" fill="var(--deep)" opacity="0.07"
+            d="M383 135 Q395 123 407 135 Q395 147 383 135 Z"/>
+
+          <!-- Victory rays - organic filled paths -->
+          <path fill="var(--deep)" opacity="0.05" d="M250 250 Q215 215 180 180 Q185 182 190 190 Q220 222 250 250 Z"/>
+          <path fill="var(--deep)" opacity="0.05" d="M250 250 Q255 205 250 160 Q252 160 254 160 Q259 205 254 250 Z"/>
+          <path fill="var(--deep)" opacity="0.05" d="M250 250 Q285 215 320 180 Q315 182 310 190 Q280 222 250 250 Z"/>
+        </svg>
+      </div>
+      <div class="chapter-content">
+        <p class="chapter-label">Chapter Four</p>
+        <h2 class="chapter-title">War in Lanka</h2>
+        <div class="chapter-description">
+          <p>Rama allies with the monkey king Sugriva and his devoted general Hanuman. After Hanuman's leap across the ocean and discovery of Sita in Ashoka Vatika, a great bridge is built to reach Lanka.</p>
+          <p>The epic battle rages. Warriors fall on both sides. Finally, Rama faces Ravana. The Brahmastra flies true, and the demon king falls. Good triumphs over evil, but at great cost. Vibhishana, Ravana's righteous brother, is crowned king of Lanka.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Transition -->
+  <div class="transition-section">
+    <div class="transition-line"></div>
+  </div>
+
+  <!-- Chapter 5: The Return -->
+  <section class="chapter dark">
+    <span class="chapter-number">05</span>
+    <div class="chapter-inner">
+      <div class="chapter-content">
+        <p class="chapter-label">Chapter Five</p>
+        <h2 class="chapter-title">Return to Ayodhya</h2>
+        <div class="chapter-description">
+          <p>The fourteen years of exile are complete. Rama, Sita, and Lakshmana board the Pushpaka Vimanam—Ravana's flying chariot now repurposed for noble return.</p>
+          <p>As they approach Ayodhya, diyas light every path. Bharata, who has ruled as regent placing Rama's sandals on the throne, rushes to embrace his brother. The city celebrates Diwali for the first time, illuminating the darkest night with countless flames.</p>
+        </div>
+      </div>
+      <div class="illustration">
+        <svg viewBox="0 0 500 500" fill="none">
+          <!-- Flying chariot - organic paths -->
+          <g class="organic-path scale-path" opacity="0.28">
+            <path fill="var(--foam)" d="M120 200 Q145 172 170 172 Q195 172 220 200 Q195 228 170 228 Q145 228 120 200 Z"/>
+            <!-- Wings - organic paths -->
+            <path fill="var(--foam)" opacity="0.7" d="M75 190 Q95 172 110 190 Q95 208 75 190 Z"/>
+            <path fill="var(--foam)" opacity="0.7" d="M230 190 Q245 172 265 190 Q245 208 230 190 Z"/>
+            <!-- Three figures on chariot - organic paths -->
+            <path fill="var(--foam)" opacity="0.8" d="M145 195 Q150 185 155 195 Q150 205 145 195 Z"/>
+            <path fill="var(--foam)" opacity="0.8" d="M166 200 Q175 191 184 200 Q175 209 166 200 Z"/>
+            <path fill="var(--foam)" opacity="0.8" d="M185 197 Q195 187 205 197 Q195 207 185 197 Z"/>
+          </g>
+
+          <!-- Flight path toward city - organic filled path -->
+          <path class="organic-path fade-path" fill="var(--foam)" opacity="0.10"
+            d="M50 220 Q150 180 280 200 Q360 220 400 280 Q398 282 396 284 Q356 224 278 204 Q150 184 52 222 Z"/>
+
+          <!-- City of Ayodhya - organic paths -->
+          <g class="organic-path fade-path" opacity="0.16">
+            <!-- Main palace -->
+            <path fill="var(--foam)" d="M340 330 L400 330 L400 410 Q370 410 340 410 Z"/>
+            <path fill="var(--foam)" d="M330 330 Q370 290 410 330 Q370 340 330 330 Z"/>
+            <!-- Spires -->
+            <path fill="var(--foam)" d="M350 280 Q360 250 370 280 Q360 285 350 280 Z"/>
+            <path fill="var(--foam)" d="M375 280 Q385 245 395 280 Q385 285 375 280 Z"/>
+          </g>
+
+          <!-- Diyas glowing along path - organic paths -->
+          <path fill="var(--foam)" opacity="0.15" d="M90 430 Q100 420 110 430 Q100 440 90 430 Z"/>
+          <path fill="var(--foam)" opacity="0.15" d="M160 440 Q170 430 180 440 Q170 450 160 440 Z"/>
+          <path fill="var(--foam)" opacity="0.15" d="M240 435 Q250 425 260 435 Q250 445 240 435 Z"/>
+          <path fill="var(--foam)" opacity="0.15" d="M310 430 Q320 420 330 430 Q320 440 310 430 Z"/>
+          <path fill="var(--foam)" opacity="0.15" d="M380 420 Q390 410 400 420 Q390 430 380 420 Z"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- Transition -->
+  <div class="transition-section">
+    <div class="transition-line"></div>
+  </div>
+
+  <!-- Quote Section -->
+  <section class="quote-section light-quote">
+    <blockquote class="quote">
+      <span class="quote-mark">"</span>
+      Truth alone triumphs, not untruth. By the path of truth, the divine path is reached.
+    </blockquote>
+  </section>
+
+  <!-- Finale -->
+  <section class="finale light-finale">
+    <!-- Ramarajya SVG - Throne with Rama and Sita -->
+    <svg class="finale-rings" viewBox="0 0 500 500" style="width: 300px; height: 300px;">
+      <!-- Throne base - organic paths -->
+      <path class="organic-path scale-path" fill="var(--deep)" opacity="0.12"
+        d="M140 380 Q143 380 143 383 L143 397 Q143 400 140 400 L360 400 Q357 400 357 397 L357 383 Q357 380 360 380 Z"/>
+      <path class="organic-path scale-path" fill="var(--deep)" opacity="0.14"
+        d="M150 360 Q152 360 152 362 L152 383 Q152 385 150 385 L350 385 Q348 385 348 383 L348 362 Q348 360 350 360 Z"/>
+
+      <!-- Rama seated - organic paths -->
+      <g class="organic-path scale-path" opacity="0.18">
+        <path fill="var(--deep)" d="M225 330 Q235 295 250 295 Q265 295 275 330 Q265 365 250 365 Q235 365 225 330 Z"/>
+        <path fill="var(--deep)" d="M232 285 Q240 267 250 267 Q260 267 268 285 Q260 303 250 303 Q240 303 232 285 Z"/>
+        <!-- Crown - organic path -->
+        <path fill="var(--deep)" opacity="0.8" d="M235 270 Q245 250 250 250 Q255 250 265 270 Q255 275 250 275 Q245 275 235 270 Z"/>
+      </g>
+
+      <!-- Sita beside throne - organic paths -->
+      <g class="organic-path scale-path" opacity="0.14">
+        <path fill="var(--deep)" d="M304 350 Q312 322 320 322 Q328 322 336 350 Q328 378 320 378 Q312 378 304 350 Z"/>
+        <path fill="var(--deep)" d="M308 320 Q314 308 320 308 Q326 308 332 320 Q326 332 320 332 Q314 332 308 320 Z"/>
+      </g>
+
+      <!-- Prosperity radiating lines - organic filled paths -->
+      <g class="organic-path fade-path" opacity="0.06">
+        <path fill="var(--deep)" d="M250 250 Q200 200 150 150 Q155 152 160 160 Q205 205 250 250 Z"/>
+        <path fill="var(--deep)" d="M250 250 Q252 190 250 130 Q254 130 254 190 Q256 250 254 250 Z"/>
+        <path fill="var(--deep)" d="M250 250 Q300 200 350 150 Q345 152 340 160 Q295 205 250 250 Z"/>
+        <path fill="var(--deep)" d="M250 250 Q190 250 130 250 Q130 254 190 254 L250 254 Z"/>
+        <path fill="var(--deep)" d="M250 250 Q310 250 370 250 Q370 254 310 254 L250 254 Z"/>
+      </g>
+    </svg>
+    <h2 class="finale-title">Ramarajya</h2>
+    <p class="finale-text">
+      Rama's reign begins—a golden age of prosperity, justice, and righteousness. His rule becomes the ideal by which all governance is measured. The Ramayana endures through millennia, teaching that dharma—righteous duty—prevails against all odds, and that love, devotion, and truth are the eternal weapons of light.
+    </p>
+  </section>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Custom Cursor
+    const cursorRing = document.querySelector('.cursor-ring');
+    const cursorDot = document.querySelector('.cursor-dot');
+    let cursorX = 0, cursorY = 0;
+    let dotX = 0, dotY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+
+      cursorX += (mouseX - cursorX) * 0.15;
+      cursorY += (mouseY - cursorY) * 0.15;
+
+      dotX += (mouseX - dotX) * 0.4;
+      dotY += (mouseY - dotY) * 0.4;
+
+      cursorRing.style.left = cursorX - 20 + 'px';
+      cursorRing.style.top = cursorY - 20 + 'px';
+
+      cursorDot.style.left = dotX - 4 + 'px';
+      cursorDot.style.top = dotY - 4 + 'px';
+    });
+
+    // Spotlight Layer - Follow cursor on dark sections
+    const spotlightLayer = document.querySelector('.spotlight-layer');
+    const spotlightCircle = document.getElementById('spotlight-circle');
+    const darkSections = document.querySelectorAll('.hero, .chapter.dark, .quote-section, .finale');
+
+    document.addEventListener('mousemove', (e) => {
+      if (spotlightCircle) {
+        spotlightCircle.setAttribute('cx', e.clientX);
+        spotlightCircle.setAttribute('cy', e.clientY);
+      }
+    });
+
+    // Toggle spotlight on dark sections
+    ScrollTrigger.create({
+      trigger: '.hero, .chapter, .quote-section, .finale',
+      start: 'top center',
+      end: 'bottom center',
+      onEnter: () => spotlightLayer?.classList.add('active'),
+      onLeave: () => spotlightLayer?.classList.remove('active'),
+      toggleActions: 'play reverse play reverse'
+    });
+
+    // Hero Animations
+    const heroTl = gsap.timeline();
+    heroTl.to('.hero-title .word', {
+      y: 0,
+      opacity: 1,
+      duration: 1,
+      stagger: 0.08,
+      ease: 'power3.out'
+    })
+    .to('.hero-subtitle', {
+      opacity: 1,
+      duration: 1,
+      ease: 'power2.out'
+    }, 0.3)
+    .to('.scroll-indicator', {
+      opacity: 1,
+      duration: 0.8,
+      ease: 'power2.out'
+    }, 0.6);
+
+    // SVG Draw Animations Setup
+    document.querySelectorAll('.draw-path').forEach(path => {
+      const length = path.getTotalLength();
+      path.style.strokeDasharray = length;
+      path.style.strokeDashoffset = length;
+    });
+
+    // Draw animations on scroll
+    gsap.to('.draw-path', {
+      strokeDashoffset: 0,
+      duration: 1.5,
+      stagger: 0.15,
+      ease: 'power2.inOut',
+      scrollTrigger: {
+        trigger: '.chapter',
+        start: 'top 70%'
+      }
+    });
+
+    // SVG Fade Animations - from 0 to target opacity
+    gsap.utils.toArray('.fade-path').forEach((path) => {
+      const targetOpacity = parseFloat(path.getAttribute('opacity')) || 0.3;
+      gsap.fromTo(path,
+        { opacity: 0, attr: { opacity: 0 } },
+        {
+          opacity: targetOpacity,
+          attr: { opacity: targetOpacity },
+          duration: 1,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: path.closest('.chapter, .hero, .finale'),
+            start: 'top 70%'
+          }
+        }
+      );
+    });
+
+    // SVG Scale Animations - from 0 with scale to target opacity
+    gsap.utils.toArray('.scale-path').forEach((path) => {
+      const targetOpacity = parseFloat(path.getAttribute('opacity')) || 0.4;
+      gsap.fromTo(path,
+        { opacity: 0, scale: 0.6, attr: { opacity: 0 } },
+        {
+          opacity: targetOpacity,
+          attr: { opacity: targetOpacity },
+          scale: 1,
+          duration: 1.2,
+          ease: 'back.out(1.7)',
+          scrollTrigger: {
+            trigger: path.closest('.chapter, .hero, .finale'),
+            start: 'top 65%'
+          }
+        }
+      );
+    });
+
+    // Other organic paths without animation class - simple fade
+    gsap.utils.toArray('.organic-path:not(.fade-path):not(.scale-path):not(.draw-path)').forEach((path) => {
+      const targetOpacity = parseFloat(path.getAttribute('opacity')) || 0.2;
+      gsap.fromTo(path,
+        { opacity: 0, attr: { opacity: 0 } },
+        {
+          opacity: targetOpacity,
+          attr: { opacity: targetOpacity },
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: path.closest('.chapter, .hero, .finale'),
+            start: 'top 75%'
+          }
+        }
+      );
+    });
+
+    // Chapter Content Fade-In (using set + to pattern)
+    gsap.set('.chapter-content', { opacity: 0, y: 40 });
+    gsap.utils.toArray('.chapter-content').forEach(content => {
+      gsap.to(content, {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        scrollTrigger: {
+          trigger: content,
+          start: 'top 80%'
+        }
+      });
+    });
+
+    // Quote Animation
+    gsap.set('.quote', { opacity: 0, y: 30 });
+    gsap.to('.quote', {
+      opacity: 1,
+      y: 0,
+      duration: 1.2,
+      scrollTrigger: {
+        trigger: '.quote-section',
+        start: 'top 60%'
+      }
+    });
+
+    // Transition Line Animations
+    gsap.utils.toArray('.transition-line').forEach(line => {
+      gsap.to(line, {
+        height: 150,
+        duration: 1,
+        ease: 'power2.inOut',
+        scrollTrigger: {
+          trigger: line.closest('.transition-section'),
+          start: 'top 70%'
+        }
+      });
+    });
+
+    // Finale Animations
+    gsap.set('.finale-rings, .finale-title, .finale-text', { opacity: 0, y: 40 });
+
+    gsap.to('.finale-rings', {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      duration: 1,
+      scrollTrigger: {
+        trigger: '.finale',
+        start: 'top 60%'
+      }
+    });
+
+    gsap.to('.finale-title', {
+      opacity: 1,
+      y: 0,
+      duration: 1,
+      delay: 0.3,
+      scrollTrigger: {
+        trigger: '.finale',
+        start: 'top 60%'
+      }
+    });
+
+    gsap.to('.finale-text', {
+      opacity: 0.8,
+      y: 0,
+      duration: 1,
+      delay: 0.5,
+      scrollTrigger: {
+        trigger: '.finale',
+        start: 'top 60%'
+      }
+    });
+
+    // Progress Bar
+    gsap.to('.progress-bar', {
+      scaleX: 1,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: 'body',
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.3
+      }
+    });
+
+    // Parallax effects on illustrations
+    gsap.utils.toArray('.illustration svg').forEach(svg => {
+      gsap.to(svg, {
+        y: -50,
+        scrollTrigger: {
+          trigger: svg.closest('.chapter'),
+          start: 'top center',
+          end: 'bottom center',
+          scrub: 1
+        }
+      });
+    });
+  </script>
+</body>
+</html>
